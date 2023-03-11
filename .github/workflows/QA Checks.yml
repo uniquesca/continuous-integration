@@ -1,4 +1,4 @@
-name: QA Checks
+name: QA Checks test
 
 on:
   workflow_call:
