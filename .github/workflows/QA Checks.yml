@@ -1,0 +1,95 @@
+name: QA Checks
+
+on:
+  workflow_call:
+    inputs:
+      config-file:
+        required: false
+        default: 'phpunit.xml'
+        type: string
+      config-from-dist:
+        required: false
+        default: false
+        type: bool
+      config-dist-file:
+        required: false
+        default: 'phpunit.xml.dist'
+        type: string
+      exec-command:
+        required: false
+        default: './vendor/bin/phpunit --configuration ${{ input.config-file}}'
+        type: string
+      use-db:
+        required: false
+        default: false
+        type: bool
+      generate-coverage-badge:
+        required: false
+        default: true
+        type: bool
+      coverage-badge-file:
+        required: false
+        default: 'coverage.svg'
+        type: string
+      codesniffer-exec-command:
+        required: false
+        default: './vendor/bin/phpcs'
+        type: string
+      psalm-exec-command:
+        required: false
+        default: './vendor/bin/psalm --show-info=true'
+        type: string
+      matrix:
+        required: true
+        type: string
+
+      jobs:
+        example_matrix:
+          runs-on: matrix.os
+          strategy:
+            matrix: ${{ fromJson(inputs.matrix) }}
+
+          steps:
+          - name: Set up PHP
+            uses: shivammathur/setup-php@v2
+            with:
+              php-version: ${{ matrix.php.version }}
+              extensions: ${{ matrix.php.extensions }}
+
+          - name: Prepare phpunit config
+            if: inputs.config-from-dist != true
+
+            run: cp ${{ inputs.config-dist-file }} ${{ input.config-file }}
+
+          - name: Prepare using db and config from dist
+            if: inputs.use-db != false
+
+            run: |
+              sudo systemctl start mysql.service
+              mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
+              cp phpunit.xml.dist phpunit.xml
+              sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
+              sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
+              sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
+
+          - name: Install Composer dependencies
+            run: |
+              php composer.phar config github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
+              php composer.phar install
+
+          - name: Running PHPUnit tests
+            run: ${{ inputs.exec-command }}
+
+          - name: Generate coverage badge
+            if: github.event_name == 'pull_request' && ${{ inputs.generate-coverage-badge }}
+            uses: timkrase/phpunit-coverage-badge@v1.2.1
+            with:
+              coverage_badge_path: ${{ inputs.coverage-badge-file }}
+              push_badge: true
+              repo_token: ${{ secrets.GITHUB_TOKEN }}
+
+          - name: Running code quality checks
+            run: composer.phar psalm
+
+          - name: Running code style checks
+            run: ${{ inputs.codesniffer-exec-command }}
