@@ -50,46 +50,46 @@ on:
             matrix: ${{ fromJson(inputs.matrix) }}
 
           steps:
-          - name: Set up PHP
-            uses: shivammathur/setup-php@v2
-            with:
-              php-version: ${{ matrix.php.version }}
-              extensions: ${{ matrix.php.extensions }}
+            - name: Set up PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                php-version: ${{ matrix.php.version }}
+                extensions: ${{ matrix.php.extensions }}
 
-          - name: Prepare phpunit config
-            if: inputs.config-from-dist != true
+            - name: Prepare phpunit config
+              if: inputs.config-from-dist != true
 
-            run: cp ${{ inputs.config-dist-file }} ${{ input.config-file }}
+              run: cp ${{ inputs.config-dist-file }} ${{ input.config-file }}
 
-          - name: Prepare using db and config from dist
-            if: inputs.use-db != false
+            - name: Prepare using db and config from dist
+              if: inputs.use-db != false
 
-            run: |
-              sudo systemctl start mysql.service
-              mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
-              cp phpunit.xml.dist phpunit.xml
-              sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
-              sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
-              sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
+              run: |
+                sudo systemctl start mysql.service
+                mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
+                cp phpunit.xml.dist phpunit.xml
+                sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
+                sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
+                sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
 
-          - name: Install Composer dependencies
-            run: |
-              php composer.phar config github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
-              php composer.phar install
+            - name: Install Composer dependencies
+              run: |
+                php composer.phar config github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
+                php composer.phar install
 
-          - name: Running PHPUnit tests
-            run: ${{ inputs.exec-command }}
+            - name: Running PHPUnit tests
+              run: ${{ inputs.exec-command }}
 
-          - name: Generate coverage badge
-            if: github.event_name == 'pull_request' && ${{ inputs.generate-coverage-badge }}
-            uses: timkrase/phpunit-coverage-badge@v1.2.1
-            with:
-              coverage_badge_path: ${{ inputs.coverage-badge-file }}
-              push_badge: true
-              repo_token: ${{ secrets.GITHUB_TOKEN }}
+            - name: Generate coverage badge
+              if: github.event_name == 'pull_request' && ${{ inputs.generate-coverage-badge }}
+              uses: timkrase/phpunit-coverage-badge@v1.2.1
+              with:
+                coverage_badge_path: ${{ inputs.coverage-badge-file }}
+                push_badge: true
+                repo_token: ${{ secrets.GITHUB_TOKEN }}
 
-          - name: Running code quality checks
-            run: composer.phar psalm
+            - name: Running code quality checks
+              run: composer.phar psalm
 
-          - name: Running code style checks
-            run: ${{ inputs.codesniffer-exec-command }}
+            - name: Running code style checks
+              run: ${{ inputs.codesniffer-exec-command }}
