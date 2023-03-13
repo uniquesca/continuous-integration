@@ -1,0 +1,39 @@
+name: 'mysql-export'
+
+inputs:
+  dump_file_path:
+    required: true
+    type: string
+  db_name:
+    required: true
+    type: string
+  host:
+    required: false
+    default: 'localhost'
+    type: string
+  username:
+    required: false
+    default: 'root'
+    type: string
+  password:
+    required: false
+    default: 'root'
+    type: string
+  port:
+    required: false
+    default: '3306'
+    type: string
+  ref:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: MySQL export
+      run: |
+        mysqlpump -u ${{inputs.username}} -p${{inputs.password}} --host ${{inputs.host}} --port ${{inputs.port}} --no-create-db --skip-definer=true ${{ inputs.db_name }} --result-file=${{ inputs.dump_file_path }}
+        sed -i '/-- Dump start time:/ {N; s/.*\n//}' ${{ inputs.dump_file_path }}   # This deletes the line with the line ending
+        sed -i 's/-- Dump end time: .*//' ${{ inputs.dump_file_path }}              # This replaces the line with an empty one
+        sed -i -r 's/`{0,1}${{inputs.db_name}}`{0,1}\.//g' ${{inputs.dump_file_path}}
+      shell: bash

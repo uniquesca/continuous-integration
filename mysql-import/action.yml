@@ -1,0 +1,33 @@
+name: 'mysql-import'
+
+inputs:
+  dump_file_path:
+    required: true
+    type: string
+  db_name:
+    required: true
+    type: string
+  host:
+    required: false
+    default: 'localhost'
+    type: string
+  username:
+    required: false
+    default: 'root'
+    type: string
+  password:
+    required: false
+    default: 'root'
+    type: string
+  port:
+    required: false
+    default: '3306'
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: MySQL import
+      run: |
+        mysql -u ${{inputs.username}} -p${{inputs.password}} --host ${{inputs.host}} --port ${{inputs.port}} ${{ inputs.db_name }} < ${{ inputs.dump_file_path }}
+      shell: bash

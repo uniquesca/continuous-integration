@@ -1,0 +1,107 @@
+name: Deploy
+
+on:
+  workflow_call:
+    secrets:
+      SSH_KEY:
+        description: 'SSH private key to use to connect to the host'
+        required: true
+      UNIQUES_GITHUB_ACCESS_TOKEN:
+        description: 'Access token for cloning Uniques private repositories from GitHub'
+        required: true
+    inputs:
+      host:
+        required: true
+        type: string
+      username:
+        required: true
+        type: string
+      port:
+        required: false
+        default: '22'
+        type: string
+      deployment_path:
+        required: true
+        type: string
+      ref:
+        required: true
+        type: string
+      clean_cache_cmd:
+        required: false
+        default: ''
+        type: string
+      post_cmd:
+        required: false
+        default: ''
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Connect to Deploy Server
+        uses: appleboy/ssh-action@v0.1.8
+        with:
+          host: ${{ inputs.host }}
+          username: ${{ inputs.username }}
+          key: ${{ secrets.SSH_KEY }}
+          port: ${{ inputs.port }}
+          script: |
+            cd ${{ inputs.deployment_path }}
+            
+            git reset --hard
+            git checkout ${{ inputs.ref }}
+            git pull
+            
+            # mysql -u root -p root -e "CREATE DATABASE IF NOT EXISTS officio.forms;"
+            # ./vendor/bin/phinx.bat migrate -c ./config/phinx.config.php
+            # rm -rf ./data/cache/*
+            
+            if [ -f "composer.json" ]; then
+              if [ ! -f "composer.phar" ]; then
+                php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+                php composer-setup.php
+                php -r "unlink('composer-setup.php');"
+              fi
+              chmod +x composer.phar
+              php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+              php composer.phar install --no-dev
+            fi
+            
+            if [ -f "package.json" ]; then
+              if [ ! -f ".npmrc" ]; then
+                echo "@uniquesca:registry=https://npm.pkg.github.com" >> .npmrc
+                echo "//npm.pkg.github.com/:_authToken=${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}" >> .npmrc
+                echo "always_auth=true" >> .npmrc
+              fi
+            
+              if ! command -v nvm &> /dev/null
+                then
+                  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.3/install.sh | bash
+                  export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
+                  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
+                  nvm install 16
+                  nvm alias set default 16
+                fi
+                
+                if ! command -v yarn &> /dev/null
+                then
+                  nvm use default
+                  npm install -g yarn
+                fi
+                
+                yarn install
+            fi
+                       
+            if [ -f "vendor/bin/phinx" ]; then
+              if [ -f "phinx.php" ]; then
+                chmod +x ./vendor/bin/phinx
+                chmod +x ./vendor/robmorgan/phinx/bin/phinx
+                ./vendor/bin/phinx migrate -c phinx.php
+                break
+              fi
+            fi
+            
+            ${{ inputs.clean_cache_cmd }}
+            
+            ${{ inputs.inputs.post_cmd }}
