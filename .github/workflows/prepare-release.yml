@@ -48,7 +48,7 @@ jobs:
           git add package.json
 
       - name: Update changelog file
-        if: [ ! -f "package.json" ] && inputs.generate_changelog == "true"'
+        if: [ ! -f "package.json" ] && inputs.generate_changelog == "true"
         uses: uniquesca/continuous-integration/update-changelog@main
         with:
           target_version: ${{ inputs.version }}
