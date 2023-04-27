@@ -42,10 +42,11 @@ jobs:
           node-version: '16'
 
       - name: Update package version
-        if: -f "package.json"
         run: |
-          npm pkg version
-          git add package.json
+          if [ -f "package.json" ]; then
+            npm pkg version
+            git add package.json
+          fi
 
       - name: Update changelog file
         #if: [ -f "package.json" && inputs.generate_changelog == "true" ]
