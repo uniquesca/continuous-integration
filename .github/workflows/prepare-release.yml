@@ -44,12 +44,12 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
-            npm pkg version
-            git add package.json
+            #npm pkg version
+            #git add package.json
           fi
 
       - name: Update changelog file
-        #if: [ -f "package.json" && inputs.generate_changelog == "true" ]
+        if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
         uses: uniquesca/continuous-integration/update-changelog@main
         with:
           target_version: ${{ inputs.version }}
