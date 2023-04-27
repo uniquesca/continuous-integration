@@ -1,13 +1,12 @@
 name: Prepare release
 
 on:
-  on:
-    push:
-      branches:
-        - 'feature/release-workflow'
-    pull_request:
-      branches:
-        - 'develop'
+  push:
+    branches:
+      - 'feature/release-workflow'
+  pull_request:
+    branches:
+      - 'develop'
 
   workflow_call:
     inputs:
