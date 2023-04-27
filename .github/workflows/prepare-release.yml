@@ -42,7 +42,7 @@ jobs:
           node-version: '16'
 
       - name: Update package version
-        #if: [ ! -f "package.json" ]
+        if: [ ! -f "package.json" ]
         run: |
           npm pkg version
           git add package.json
