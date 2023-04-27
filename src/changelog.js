@@ -35,7 +35,7 @@ function normalizeChangelog(changelogContents) {
     changelogContents = changelogContents.replaceAll(/^[ \t]*#*[ \t]*v?[ \t]*(\d+)/gm, '## v$1');
 
     // Replace more than two linebreaks with one
-    changelogContents = changelogContents.replaceAll(/[\n\r(?:\r\n)\v]{2,}/gm, "\n");
+    changelogContents = changelogContents.replaceAll(/\n\s*\n/g, "\n");
 
     // Adding line breaks around headers
     changelogContents = changelogContents.replaceAll(/^(##.*)$/gm, "\n$1\n");
@@ -43,17 +43,45 @@ function normalizeChangelog(changelogContents) {
     return changelogContents;
 }
 
-// Normalizes output given by the git log
-function normalizeGitLog(gitLogContents) {
-    return gitLogContents.replaceAll(/^[\t ]*\*[\t ]*\*[\t ]*/gm, "* ");
-}
-
 function getGitLogSinceLastTag() {
     const lastVersionCommand = "git describe --abbrev=0 --tags";
     const lastVersion = cp.execSync(lastVersionCommand);
-    const command = "git log --no-merges " + lastVersion.toString().trim() + "..HEAD --pretty=format:'* %s (%h by %an)' | grep --line-buffered -i -v -E 'documentation|refactoring'";
+    const command = "git log --no-merges " + lastVersion.toString().trim() + "..HEAD --pretty=format:'%B||%h||%an||EOR'";
     const result = cp.spawnSync('sh', ['-c', command]);
     return result.stdout.toString();
+}
+
+// Normalizes output given by the git log
+function normalizeGitLog(gitLogContents) {
+    const records = gitLogContents.split(/\|\|EOR\s?/g);
+    return records
+        .map(record => normalizeGitLogRecord(record))
+        .filter(record => record.length > 0)
+        .join("\n");
+}
+
+function normalizeGitLogRecord(gitLogRecord) {
+    // First we split message into the parts we need
+    const [message, hash, author] = gitLogRecord.split('||');
+    // Then we trim line breaks and split commit message by line breaks.
+    // We also try and split single-line messages describing several things.
+    // Thanks to those who didn't care to format the messages a bit.
+    const messageParts = message.replace(/^\s+|\s+$/g, '')
+        .split(/((?<=[;.]) ?(?=[A-Z][a-z]+: ?.*)|\s^)/gm)
+        .map(part => part.replace(/^\s+|\s+$/g, '').trim())
+        .filter(part => part.length > 0);
+
+    if (messageParts.length == 0) {
+        return ''; // It will be filtered out
+    }
+
+    return messageParts.map(
+        messagePart => '* '
+            + messagePart
+                .trim() // Remove spaces
+                .replace(/^\*|[\.;]$/g, '') // Remove stars and remove dots and semicolons
+                .trim() // and remove spaces again
+            + ' (' + hash + ' by ' + author + ')').join("\n");
 }
 
 function appendChangeLog(changelogContents, targetVersion) {
