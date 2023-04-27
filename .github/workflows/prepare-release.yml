@@ -11,7 +11,8 @@ on:
   workflow_call:
     inputs:
       version:
-        required: true
+        description: 'fix this later'
+        required: false
         default: '1.0.21'
         type: string
       generate_changelog:
