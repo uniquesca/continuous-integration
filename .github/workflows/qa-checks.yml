@@ -86,13 +86,10 @@ jobs:
             sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
             sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
           fi
-          cat ./phpunit.xml
-          chmod +x ./phpunit.xml
           
       - name: Run PHPUnit
         run: |
           if [ -f "phpunit.xml" ]; then
-            #cp phpunit.xml.dist phpunit.xml
             ./vendor/bin/phpunit --configuration phpunit.xml
             echo "phpunit_executed=true" >> $GITHUB_ENV
           else
