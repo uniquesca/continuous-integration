@@ -92,7 +92,7 @@ jobs:
       - name: Run PHPUnit
         run: |
           if [ -f "phpunit.xml" ]; then
-            cp phpunit.xml.dist phpunit.xml
+            #cp phpunit.xml.dist phpunit.xml
             ./vendor/bin/phpunit --configuration phpunit.xml
             echo "phpunit_executed=true" >> $GITHUB_ENV
           else
