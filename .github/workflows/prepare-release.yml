@@ -54,7 +54,7 @@ jobs:
         #if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
         uses: uniquesca/continuous-integration/update-changelog@main
         with:
-          target_version: ${{ inputs.version }}
+          target_version: '1.0.21'
 
       - name: Update DB dump
         #if: ${{ inputs.update_db }} == true && [ -f "inputs.db_dump_path" ]
