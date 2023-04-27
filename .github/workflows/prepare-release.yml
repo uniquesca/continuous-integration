@@ -1,6 +1,14 @@
 name: Prepare release
 
 on:
+  on:
+    push:
+      branches:
+        - 'feature/release-workflow'
+    pull_request:
+      branches:
+        - 'develop'
+
   workflow_call:
     inputs:
       version:
@@ -50,5 +58,5 @@ jobs:
         if: '${{ inputs.update_db }} == true && exists(inputs.db_dump_path)'
         run: |
           #in progress
-          #${{ inputs.migration_command }}
+          #con${{ inputs.migration_command }}
           #git add db_dump.sql
