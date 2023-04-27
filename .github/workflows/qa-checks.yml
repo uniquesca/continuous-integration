@@ -87,6 +87,7 @@ jobs:
             sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
           fi
           cat ./phpunit.xml
+          chmod +x ./phpunit.xml
           
       - name: Run PHPUnit
         run: |
