@@ -50,11 +50,15 @@ jobs:
             #git add package.json
           #fi
 
+      - name: Debug
+        run: |
+          echo ${{ inputs.version }}
+
 #      - name: Update changelog file
 #        #if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
 #        uses: uniquesca/continuous-integration/update-changelog@main
 #        with:
-#          target_version: {{ inputs.version }}
+#          target_version: ${{ inputs.version }}
 
       - name: Update DB dump
         #if: ${{ inputs.update_db }} == true && [ -f "inputs.db_dump_path" ]
