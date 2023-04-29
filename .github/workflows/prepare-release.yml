@@ -70,7 +70,8 @@ jobs:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
 
-      - run: |
+      - if: ${{ inputs.update_db == true }}
+        run: |
           cat <<EOT >> config/autoload/local.php
           <?php
           return [
@@ -89,7 +90,8 @@ jobs:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
 
-      - run: cat ./scripts/db/dump.sql
+      - if: ${{ inputs.update_db == true }}
+        run: cat ./scripts/db/dump.sql
 
 #      - run: |
 #          git config --local user.email "gha@uniques.ca"
