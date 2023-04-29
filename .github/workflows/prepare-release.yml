@@ -55,7 +55,7 @@ jobs:
 #          target_version: ${{ inputs.version }}
 
       - name: Update DB dump
-      - run: |
+        run: |
           php composer.phar config --auth github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
           php composer.phar install
 
