@@ -43,12 +43,7 @@ jobs:
             #git add package.json
           #fi
 
-      - name: Debug
-        run: |
-          echo ${{ inputs.version }}
-
       - name: Update changelog file
-        #if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
         if: ${{ inputs.generate_changelog == true }}
         uses: uniquesca/continuous-integration/update-changelog@main
         with:
@@ -60,17 +55,20 @@ jobs:
           php composer.phar config --auth github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
           php composer.phar install
 
-      - run: |
+      - name: Init database
+        run: |
           sudo service mysql start
           mysql -u root -proot --execute="CREATE DATABASE mysql_test;"
 
-      - uses: uniquesca/continuous-integration/mysql-import@main
+      - name: Import DB
+        uses: uniquesca/continuous-integration/mysql-import@main
         if: ${{ inputs.update_db == true }}
         with:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
 
-      - if: ${{ inputs.update_db == true }}
+      - name: Prepare config for DB
+        if: ${{ inputs.update_db == true }}
         run: |
           cat <<EOT >> config/autoload/local.php
           <?php
@@ -84,13 +82,15 @@ jobs:
           EOT
           ./vendor/bin/phinx migrate
 
-      - uses: uniquesca/continuous-integration/mysql-export@main
+      - name: Export DB
+        uses: uniquesca/continuous-integration/mysql-export@main
         if: ${{ inputs.update_db == true }}
         with:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
 
-      - if: ${{ inputs.update_db == true }}
+      - name: Debug DB dump
+        if: ${{ inputs.update_db == true }}
         run: cat ./scripts/db/dump.sql
 
 #      - run: |
