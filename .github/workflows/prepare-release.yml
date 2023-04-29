@@ -1,13 +1,6 @@
 name: Prepare release
 
 on:
-  push:
-    branches:
-      - 'feature/release-workflow'
-  pull_request:
-    branches:
-      - 'develop'
-
   workflow_call:
     inputs:
       version:
@@ -61,8 +54,43 @@ jobs:
           target_version: ${{ inputs.version }}
 
       - name: Update DB dump
-        #if: ${{ inputs.update_db }} == true && [ -f "inputs.db_dump_path" ]
-        run: |
-          #in progress
-          #con${{ inputs.migration_command }}
-          #git add db_dump.sql
+      - run: |
+          php composer.phar config --auth github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
+          php composer.phar install
+
+      - run: |
+          sudo service mysql start
+          mysql -u root -proot --execute="CREATE DATABASE mysql_test;"
+
+      - uses: uniquesca/continuous-integration/mysql-import@main
+        with:
+          dump_file_path: ./scripts/db/dump.sql
+          db_name: mysql_test
+
+      - run: |
+          cat <<EOT >> config/autoload/local.php
+          <?php
+          return [
+            'db' => [
+              'dbname'   => 'mysql_test',
+              'username' => 'root',
+              'password' => 'root',
+            ],
+          ];
+          EOT
+          ./vendor/bin/phinx migrate
+
+      - uses: uniquesca/continuous-integration/mysql-export@main
+        with:
+          dump_file_path: ./scripts/db/dump.sql
+          db_name: mysql_test
+
+      - run: cat ./scripts/db/dump.sql
+
+#      - run: |
+#          git config --local user.email "gha@uniques.ca"
+#          git config --local user.name "GitHub Actions"
+#
+#          git add scripts/db/dump.sql
+#
+#          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the DB dump(s): #${GITHUB_SHA}" && git push)
