@@ -55,6 +55,7 @@ jobs:
           target_version: ${{ inputs.version }}
 
       - name: Update DB dump
+        if: ${{ inputs.update_db == true }}
         run: |
           php composer.phar config --auth github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
           php composer.phar install
@@ -64,6 +65,7 @@ jobs:
           mysql -u root -proot --execute="CREATE DATABASE mysql_test;"
 
       - uses: uniquesca/continuous-integration/mysql-import@main
+        if: ${{ inputs.update_db == true }}
         with:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
@@ -82,6 +84,7 @@ jobs:
           ./vendor/bin/phinx migrate
 
       - uses: uniquesca/continuous-integration/mysql-export@main
+        if: ${{ inputs.update_db == true }}
         with:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
