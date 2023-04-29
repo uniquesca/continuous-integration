@@ -47,12 +47,12 @@ jobs:
         run: |
           echo ${{ inputs.version }}
 
-      - name: Update changelog file
-        #if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
-        if: ${{ inputs.generate_changelog == "true" }}
-        uses: uniquesca/continuous-integration/update-changelog@main
-        with:
-          target_version: ${{ inputs.version }}
+#      - name: Update changelog file
+#        #if: ${{ -f "package.json" && inputs.generate_changelog == "true" }}
+#        if: ${{ inputs.generate_changelog == "true" }}
+#        uses: uniquesca/continuous-integration/update-changelog@main
+#        with:
+#          target_version: ${{ inputs.version }}
 
       - name: Update DB dump
       - run: |
