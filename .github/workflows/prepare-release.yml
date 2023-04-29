@@ -67,7 +67,7 @@ jobs:
           dump_file_path: ./scripts/db/dump.sql
           db_name: mysql_test
 
-      - name: Prepare config for DB
+      - name: Prepare config for DB and install migrations
         if: ${{ inputs.update_db == true }}
         run: |
           cat <<EOT >> config/autoload/local.php
@@ -80,7 +80,7 @@ jobs:
             ],
           ];
           EOT
-          ./vendor/bin/phinx migrate
+          ${{ inputs.migration_command }}
 
       - name: Export DB
         uses: uniquesca/continuous-integration/mysql-export@main
