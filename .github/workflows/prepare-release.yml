@@ -93,10 +93,10 @@ jobs:
         if: ${{ inputs.update_db == true }}
         run: cat ./scripts/db/dump.sql
 
-#      - run: |
-#          git config --local user.email "gha@uniques.ca"
-#          git config --local user.name "GitHub Actions"
-#
-#          git add scripts/db/dump.sql
-#
-#          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the DB dump(s): #${GITHUB_SHA}" && git push)
+      - run: |
+          git config --local user.email "gha@uniques.ca"
+          git config --local user.name "GitHub Actions"
+
+          git add scripts/db/dump.sql
+
+          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the DB dump(s): #${GITHUB_SHA}" && git push)
