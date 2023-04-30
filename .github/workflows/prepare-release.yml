@@ -100,7 +100,7 @@ jobs:
           git config --local user.email "gha@uniques.ca"
           git config --local user.name "GitHub Actions"
           
-          git pull
+          git pull origin release/1.0.21
 
           if [ -f "package.json" ]; then
             git add package.json
