@@ -96,8 +96,8 @@ jobs:
         run: cat ./scripts/db/dump.sql
 
 #      - run: |
-          git config --local user.email "gha@uniques.ca"
-          git config --local user.name "GitHub Actions"
+#          git config --local user.email "gha@uniques.ca"
+#          git config --local user.name "GitHub Actions"
 #
 #          git add scripts/db/dump.sql
 #
