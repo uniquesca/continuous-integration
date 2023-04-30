@@ -99,8 +99,6 @@ jobs:
         run: |
           git config --local user.email "gha@uniques.ca"
           git config --local user.name "GitHub Actions"
-          
-          git pull --rebase
 
           if [ -f "package.json" ]; then
             git add package.json
