@@ -103,12 +103,12 @@ jobs:
             git add package.json
           fi
           
-          if [ ${{ inputs.update_db == true }} ]; then
+          if ${{ inputs.update_db == true }}; then
             git add composer.json
             git add scripts/db/dump.sql
           fi
           
-          if [ ${{ inputs.generate_changelog == true }} ]; then
+          if ${{ inputs.generate_changelog == true }}; then
             git add CHANGELOG.md
           fi
           
