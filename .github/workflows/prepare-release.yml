@@ -95,7 +95,8 @@ jobs:
         if: ${{ inputs.update_db == true }}
         run: cat ./scripts/db/dump.sql
 
-      - run: |
+      - name: Commit changes
+        run: |
           git config --local user.email "gha@uniques.ca"
           git config --local user.name "GitHub Actions"
 
