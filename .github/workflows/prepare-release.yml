@@ -113,4 +113,4 @@ jobs:
             git add CHANGELOG.md
           fi
           
-          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the new release: #${GITHUB_SHA}" && git push)
+          #git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the new release: #${GITHUB_SHA}" && git push)
