@@ -39,10 +39,10 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
-            #npm pkg version ${{ inputs.version }}
-            git config --local user.email "gha@uniques.ca"
-            git config --local user.name "GitHub Actions"
-            npm version ${{ inputs.version }}
+            npm pkg version ${{ inputs.version }}
+#            git config --local user.email "gha@uniques.ca"
+#            git config --local user.name "GitHub Actions"
+#            npm version ${{ inputs.version }}
           fi
 
       - name: Update changelog file
