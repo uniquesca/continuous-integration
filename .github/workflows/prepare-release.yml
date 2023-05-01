@@ -102,7 +102,6 @@ jobs:
           fi
           
           if ${{ inputs.update_db == true }}; then
-            git add composer.json
             git add ${{ inputs.db_dump_path }}
           fi
           
@@ -110,5 +109,4 @@ jobs:
             git add CHANGELOG.md
           fi
           
-          git status
-          #git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the new release: #${GITHUB_SHA}" && git push)
+          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the new release: #${GITHUB_SHA}" && git push)
