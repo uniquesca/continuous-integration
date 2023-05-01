@@ -83,9 +83,9 @@ jobs:
 
       - name: Export DB
         uses: uniquesca/continuous-integration/mysql-export@main
-        if: ${{ inputs.update_db == true }}
+        if: ${{ inputs.update_db == true }}db_dump_path
         with:
-          dump_file_path: ./scripts/db/dump.sql
+          dump_file_path: ${{ inputs.db_dump_path }}
           db_name: mysql_test
 
       - name: Debug DB dump
