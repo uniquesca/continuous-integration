@@ -39,6 +39,7 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
+            npm help pkg
             npm pkg version ${{ inputs.version }}
           fi
 
