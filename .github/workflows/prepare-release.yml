@@ -39,7 +39,7 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
-            npm pkg set version ${{ inputs.version }}
+            npm pkg set version = ${{ inputs.version }}
             #npm --no-git-tag-version version ${{ inputs.version }}
           fi
 
