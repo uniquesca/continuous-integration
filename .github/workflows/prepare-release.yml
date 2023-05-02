@@ -71,20 +71,20 @@ jobs:
           dump_file_path: ${{ inputs.db_dump_path }}
           db_name: mysql_test
 
-      - name: Prepare config for DB and install migrations
-        if: ${{ inputs.update_db == true }}
-        run: |
-          cat <<EOT >> config/autoload/local.php
-          <?php
-          return [
-            'db' => [
-              'dbname'   => 'mysql_test',
-              'username' => 'root',
-              'password' => 'root',
-            ],
-          ];
-          EOT
-          ${{ inputs.migration_command }}
+#      - name: Prepare config for DB and install migrations
+#        if: ${{ inputs.update_db == true }}
+#        run: |
+#          cat <<EOT >> config/autoload/local.php
+#          <?php
+#          return [
+#            'db' => [
+#              'dbname'   => 'mysql_test',
+#              'username' => 'root',
+#              'password' => 'root',
+#            ],
+#          ];
+#          EOT
+#          ${{ inputs.migration_command }}
 
       - name: Export DB
         uses: uniquesca/continuous-integration/mysql-export@main
