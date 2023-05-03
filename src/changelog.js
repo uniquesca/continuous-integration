@@ -56,8 +56,8 @@ function normalizeGitLog(gitLogContents) {
     let records = gitLogContents.split(/\|\|EOR\s?/g);
     records = records.map(record => normalizeGitLogRecord(record));
 
-    const normalizedRecords = [];
-    for (const record of normalizedRecords) {
+    let normalizedRecords = [];
+    for (const record of records) {
         if (Array.isArray(record)) {
             normalizedRecords = normalizedRecords.concat(record);
         } else {
@@ -68,8 +68,8 @@ function normalizeGitLog(gitLogContents) {
     return normalizedRecords
         .filter(record => record.length > 0)
         .sort(function (a, b) {
-            const order = ['breaking', 'deprecated', 'fix', 'new', 'update', 'documentation', 'refactoring'];
-            const aMatch = a.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking)/i);
+            const order = ['breaking', 'deprecated', 'fix', 'new', 'update', 'automated', 'documentation', 'refactoring'];
+            const aMatch = a.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking|automated)/i);
             let aIndex = -1;
             if (aMatch) {
                 aIndex = order.indexOf(aMatch[1].toLowerCase());
@@ -78,7 +78,7 @@ function normalizeGitLog(gitLogContents) {
                 aIndex = 100;
             }
 
-            const bMatch = b.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking)/i);
+            const bMatch = b.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking|automated)/i);
             let bIndex = -1;
             if (bMatch) {
                 bIndex = order.indexOf(bMatch[1].toLowerCase());
@@ -114,12 +114,22 @@ function normalizeGitLogRecord(gitLogRecord) {
     }
 
     return messageParts.map(
-        messagePart => '* '
-            + messagePart
-                .trim() // Remove spaces
-                .replace(/^\*|[\.;]$/g, '') // Remove stars and remove dots and semicolons
-                .trim() // and remove spaces again
-            + ' (' + hash + ' by ' + author + ')');
+        function (messagePart) {
+            if (messagePart.match(/Co-authored-by/i)) {
+                return '';
+            } else {
+                if (messagePart.match(/automatic commit/i) && author.match(/github actions/i)) {
+                    messagePart = 'Automated: ' + messagePart;
+                }
+                return '* '
+                    + messagePart
+                        .trim() // Remove spaces
+                        .replace(/^\*|[\.;]$/g, '') // Remove stars and remove dots and semicolons
+                        .trim() // and remove spaces again
+                    + ' (' + hash + ' by ' + author + ')';
+            }
+        }
+    );
 }
 
 function appendChangeLog(changelogContents, targetVersion) {
