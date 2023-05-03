@@ -49,6 +49,7 @@ jobs:
           script: |
             cd ${{ inputs.deployment_path }}
             
+            git clean -fd
             git reset --hard
             git checkout ${{ inputs.ref }}
             git pull

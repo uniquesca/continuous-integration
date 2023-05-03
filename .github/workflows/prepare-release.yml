@@ -1,0 +1,102 @@
+name: Prepare release
+
+on:
+  workflow_call:
+    secrets:
+      UNIQUES_GITHUB_ACCESS_TOKEN:
+        description: 'Access token for cloning Uniques private repositories from GitHub'
+        required: true
+    inputs:
+      version:
+        required: true
+        type: string
+      generate_changelog:
+        required: false
+        default: true
+        type: boolean
+      update_db:
+        required: false
+        default: false
+        type: boolean
+      db_dump_path:
+        required: false
+        type: string
+      migration_command:
+        required: false
+        default: './vendor/bin/phinx migrate'
+        type: string
+
+jobs:
+  prepare-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+
+      - name: Update package version
+        run: |
+          if [ -f "package.json" ]; then
+            npm pkg set version=${{ inputs.version }}
+          fi
+
+      - name: Update changelog file
+        if: ${{ inputs.generate_changelog == true }}
+        uses: uniquesca/continuous-integration/update-changelog@main
+        with:
+          target_version: ${{ inputs.version }}
+
+      - name: Install Composer dependencies
+        if: ${{ inputs.update_db == true }}
+        run: |
+          php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+          php composer.phar install
+
+      - name: Init database
+        if: ${{ inputs.update_db == true }}
+        run: |
+          sudo service mysql start
+          mysql -u root -proot --execute="CREATE DATABASE mysql_test;"
+
+      - name: Import DB
+        uses: uniquesca/continuous-integration/mysql-import@main
+        if: ${{ inputs.update_db == true }}
+        with:
+          dump_file_path: ${{ inputs.db_dump_path }}
+          db_name: mysql_test
+
+      - name: Export DB
+        uses: uniquesca/continuous-integration/mysql-export@main
+        if: ${{ inputs.update_db == true }}
+        with:
+          dump_file_path: ${{ inputs.db_dump_path }}
+          db_name: mysql_test
+
+      - name: Debug DB dump
+        if: ${{ inputs.update_db == true }}
+        run: cat ${{ inputs.db_dump_path }}
+
+      - name: Commit changes
+        run: |
+          git config --local user.email "gha@uniques.ca"
+          git config --local user.name "GitHub Actions"
+
+          if [ -f "package.json" ]; then
+            git add package.json
+          fi
+          
+          if ${{ inputs.update_db == true }}; then
+            git add ${{ inputs.db_dump_path }}
+          fi
+          
+          if ${{ inputs.generate_changelog == true }}; then
+            git add CHANGELOG.md
+          fi
+          
+          git diff-index --quiet HEAD || (git commit -a -m "Automatic commit for the new release: #${GITHUB_SHA}" && git push)
