@@ -57,7 +57,35 @@ function normalizeGitLog(gitLogContents) {
     return records
         .map(record => normalizeGitLogRecord(record))
         .filter(record => record.length > 0)
-        .join("\n");
+        .sort(function (a, b) {
+            const order = ['breaking', 'deprecated', 'fix', 'new', 'update', 'documentation', 'refactoring'];
+            const aMatch = a.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking)/i);
+            let aIndex = -1;
+            if (aMatch) {
+                aIndex = order.indexOf(aMatch[1].toLowerCase());
+            }
+            if (aIndex === -1) {
+                aIndex = 100;
+            }
+
+            const bMatch = b.match(/^\*?\s*(new|update|fix|documentation|refactoring|deprecated|breaking)/i);
+            let bIndex = -1;
+            if (bMatch) {
+                bIndex = order.indexOf(bMatch[1].toLowerCase());
+            }
+            if (bIndex === -1) {
+                bIndex = 100;
+            }
+
+            if (aIndex > bIndex) {
+                return 1;
+            } else if (aIndex < bIndex) {
+                return -1;
+            } else {
+                return 0;
+            }
+        })
+        .join("\n")
 }
 
 function normalizeGitLogRecord(gitLogRecord) {
