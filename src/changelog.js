@@ -53,9 +53,19 @@ function getGitLogSinceLastTag() {
 
 // Normalizes output given by the git log
 function normalizeGitLog(gitLogContents) {
-    const records = gitLogContents.split(/\|\|EOR\s?/g);
-    return records
-        .map(record => normalizeGitLogRecord(record))
+    let records = gitLogContents.split(/\|\|EOR\s?/g);
+    records = records.map(record => normalizeGitLogRecord(record));
+
+    const normalizedRecords = [];
+    for (const record of normalizedRecords) {
+        if (Array.isArray(record)) {
+            normalizedRecords = normalizedRecords.concat(record);
+        } else {
+            normalizedRecords.push(record);
+        }
+    }
+
+    return normalizedRecords
         .filter(record => record.length > 0)
         .sort(function (a, b) {
             const order = ['breaking', 'deprecated', 'fix', 'new', 'update', 'documentation', 'refactoring'];
@@ -109,7 +119,7 @@ function normalizeGitLogRecord(gitLogRecord) {
                 .trim() // Remove spaces
                 .replace(/^\*|[\.;]$/g, '') // Remove stars and remove dots and semicolons
                 .trim() // and remove spaces again
-            + ' (' + hash + ' by ' + author + ')').join("\n");
+            + ' (' + hash + ' by ' + author + ')');
 }
 
 function appendChangeLog(changelogContents, targetVersion) {
