@@ -2,6 +2,10 @@ name: QA Checks
 
 on:
   workflow_call:
+    secrets:
+      UNIQUES_GITHUB_ACCESS_TOKEN:
+        description: 'Access token for cloning Uniques private repositories from GitHub'
+        required: true
     inputs:
       use-db:
         required: false
@@ -72,7 +76,7 @@ jobs:
           php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
           php composer-setup.php
           php -r "unlink('composer-setup.php');"
-          php composer.phar config --auth github-oauth.github.com ${{ secrets.ACCESS_TOKEN }}
+          php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
           php composer.phar install
       
       - name: Prepare PHPUnit config
@@ -102,7 +106,7 @@ jobs:
         with:
           coverage_badge_path: ${{ inputs.coverage-badge-file }}
           push_badge: true
-          repo_token: ${{ secrets.ACCESS_TOKEN }}
+          repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
 
       - name: Run PHP Codesniffer
         run: |
