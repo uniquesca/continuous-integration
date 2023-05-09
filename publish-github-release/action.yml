@@ -20,12 +20,12 @@ runs:
   using: "composite"
   steps:
     - uses: montudor/action-zip@v1
-      if: ${{ inputs.github_release == 'true' }}
+      if: ${{ inputs.github_release == true }}
       with:
         args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
 
     - uses: marvinpinto/action-automatic-releases@latest
-      if: ${{ inputs.github_release == 'true' }}
+      if: ${{ inputs.github_release == true }}
       with:
         repo_token: ${{ inputs.UNIQUES_GITHUB_ACCESS_TOKEN }}
         automatic_release_tag: ${{ inputs.release_version }}
