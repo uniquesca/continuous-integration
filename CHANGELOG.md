@@ -15,3 +15,7 @@
 * Update: added integration with the `prepare-release` pipeline (4691894 by George Shestayev)
 * Update: deploy workflow will remove unindexed files now (9da66ed by George Shestayev)
 * Documentation: minor improvement in changelog format, updated readme (87a0358 by George Shestayev)
+
+## v1.1.1
+
+* Fix: added missing step of importing DB into qa-checks workflow
