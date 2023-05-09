@@ -82,11 +82,11 @@ jobs:
           npm pkg delete devDependencies
           npm pkg delete scripts
 
-      - name: Publish NPM package on GitHub
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: |
-          npm publish
+      #- name: Publish NPM package on GitHub
+      #  env:
+      #    NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      #  run: |
+      #    npm publish
 
       - uses: uniquesca/continuous-integration/publish-github-release@feature/publish-github-release
         if: ${{ inputs.github_release == true }}
