@@ -18,4 +18,11 @@
 
 ## v1.1.1
 
-* Fix: added missing step of importing DB into qa-checks workflow
+* BREAKING: renamed inputs generate-coverage-badge and coverage-badge-file into generate_coverage_badge and 
+    coverage_badge_file for `qa-checks` workflow
+* Fix: added missing step input importing DB (includes new `db_dump_file` input) in `qa-checks` workflow
+
+## v1.1.2
+
+* BREAKING: renamed input use-db into use_db for `qa-checks` workflow
+* Update: updated steps naming in `qa-checks` workflow
