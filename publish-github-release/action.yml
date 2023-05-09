@@ -24,6 +24,12 @@ inputs:
     required: false
     type: boolean
     default: false
+  UNIQUES_GITHUB_ACCESS_TOKEN:
+    required: true
+    type: string
+  NODE_AUTH_TOKEN:
+    required: true
+    type: string
 
 runs:
   using: "composite"
@@ -49,13 +55,13 @@ runs:
       run: |
         if [ ! -f ".npmrc" ]; then
           echo "@uniquesca:registry=https://npm.pkg.github.com" >> .npmrc
-          echo "//npm.pkg.github.com/:_authToken=${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ inputs.UNIQUES_GITHUB_ACCESS_TOKEN }}" >> .npmrc
           echo "always_auth=true" >> .npmrc
         fi
       shell: bash
     - name: Install NPM dependencies
       env:
-        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        NODE_AUTH_TOKEN: ${{ inputs.NODE_AUTH_TOKEN }}
       run: npm install --no-dev
       shell: bash
     - name: Run build command if specified
@@ -71,7 +77,7 @@ runs:
 
     #      - name: Publish NPM package on GitHub
     #        env:
-    #          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    #          NODE_AUTH_TOKEN: ${{ inputs.NODE_AUTH_TOKEN }}
     #        run: |
     #          npm publish
     #        shell: bash
@@ -83,7 +89,7 @@ runs:
     - uses: marvinpinto/action-automatic-releases@latest
       if: ${{ inputs.github_release == 'true' }}
       with:
-        repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+        repo_token: ${{ inputs.UNIQUES_GITHUB_ACCESS_TOKEN }}
         automatic_release_tag: ${{ inputs.release_version }}
         prerelease: false
         title: Release ${{ inputs.release_version }}
