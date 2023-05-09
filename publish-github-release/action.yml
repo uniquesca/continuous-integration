@@ -1,10 +1,85 @@
 name: 'publish github release'
 
+inputs:
+  node_version:
+    required: false
+    type: number
+    default: 16
+  release_version:
+    required: true
+    type: string
+  build_cmd:
+    required: false
+    type: string
+    default: ''
+  github_release:
+    required: false
+    default: true
+    type: boolean
+  dist_folder:
+    required: false
+    default: 'dist'
+    type: string
+  cleanup_dependencies:
+    required: false
+    type: boolean
+    default: false
+
 runs:
   using: "composite"
   steps:
-    - name: Publish NPM package on GitHub
+    - uses: actions/setup-node@v3
+      with:
+        node-version: ${{ inputs.node_version }}
+    - name: Checkout application repository
+      uses: actions/checkout@v3
+    - name: Get NPM cache directory
+      id: npm-cache-dir
+      shell: bash
+      run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+    - name: Cache NPM dependencies
+      id: cache-npm
+      uses: actions/cache@v3
+      with:
+        path: ${{ steps.npm-cache-dir.outputs.dir }}
+        key: ${{ runner.os }}-node-${{ hashFiles('package.json,package-lock.json') }}
+        restore-keys: |
+          ${{ runner.os }}-node-
+    - name: Prepare .npmrc file
+      run: |
+        if [ ! -f ".npmrc" ]; then
+          echo "@uniquesca:registry=https://npm.pkg.github.com" >> .npmrc
+          echo "//npm.pkg.github.com/:_authToken=${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}" >> .npmrc
+          echo "always_auth=true" >> .npmrc
+        fi
+    - name: Install NPM dependencies
       env:
         NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      run: npm install --no-dev
+    - name: Run build command if specified
+      run: ${{ inputs.build_cmd }}
+    - name: Remove dependencies from package.json
+      if: ${{ inputs.cleanup_dependencies == 'true' }}
       run: |
-        npm publish
+        npm pkg delete dependencies
+        npm pkg delete devDependencies
+        npm pkg delete scripts
+
+    #      - name: Publish NPM package on GitHub
+    #        env:
+    #          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+    #        run: |
+    #          npm publish
+
+    - uses: montudor/action-zip@v1
+      if: ${{ inputs.github_release == 'true' }}
+      with:
+        args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
+    - uses: marvinpinto/action-automatic-releases@latest
+      if: ${{ inputs.github_release == 'true' }}
+      with:
+        repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+        automatic_release_tag: ${{ inputs.release_version }}
+        prerelease: false
+        title: Release ${{ inputs.release_version }}
+        files: dist.zip
