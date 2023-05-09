@@ -94,13 +94,3 @@ jobs:
           release_version: 1.0.231
           dist_folder: 'dist'
           UNIQUES_GITHUB_ACCESS_TOKEN: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
-
-      - name: Debug Boolean
-        if: ${{ inputs.github_release == true }}
-        run: |
-          echo 'Boolean is works'
-
-      - name: Debug string
-        if: ${{ inputs.github_release == 'true'}}
-        run: |
-          echo 'Boolean doesn't works'
