@@ -37,12 +37,15 @@ runs:
     - uses: actions/setup-node@v3
       with:
         node-version: ${{ inputs.node_version }}
+
     - name: Checkout application repository
       uses: actions/checkout@v3
+
     - name: Get NPM cache directory
       id: npm-cache-dir
-      shell: bash
       run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+      shell: bash
+
     - name: Cache NPM dependencies
       id: cache-npm
       uses: actions/cache@v3
@@ -51,6 +54,7 @@ runs:
         key: ${{ runner.os }}-node-${{ hashFiles('package.json,package-lock.json') }}
         restore-keys: |
           ${{ runner.os }}-node-
+
     - name: Prepare .npmrc file
       run: |
         if [ ! -f ".npmrc" ]; then
@@ -59,14 +63,17 @@ runs:
           echo "always_auth=true" >> .npmrc
         fi
       shell: bash
+
     - name: Install NPM dependencies
       env:
         NODE_AUTH_TOKEN: ${{ inputs.NODE_AUTH_TOKEN }}
       run: npm install --no-dev
       shell: bash
+
     - name: Run build command if specified
       run: ${{ inputs.build_cmd }}
       shell: bash
+
     - name: Remove dependencies from package.json
       if: ${{ inputs.cleanup_dependencies == 'true' }}
       run: |
@@ -86,6 +93,7 @@ runs:
       if: ${{ inputs.github_release == 'true' }}
       with:
         args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
+
     - uses: marvinpinto/action-automatic-releases@latest
       if: ${{ inputs.github_release == 'true' }}
       with:
