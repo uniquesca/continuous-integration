@@ -1,0 +1,10 @@
+name: 'publish github release'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Publish NPM package on GitHub
+      env:
+        NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+      run: |
+        npm publish
