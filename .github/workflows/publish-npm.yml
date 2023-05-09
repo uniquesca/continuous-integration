@@ -99,3 +99,8 @@ jobs:
         if: ${{ inputs.github_release == true }}
         run: |
           echo 'Boolean is works'
+
+      - name: Debug string
+        if: ${{ inputs.github_release == 'true '}}
+        run: |
+          echo 'Boolean doesn't works'
