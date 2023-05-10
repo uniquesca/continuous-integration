@@ -26,6 +26,10 @@ on:
       ref:
         required: true
         type: string
+      db_migration_cmd:
+        required: false
+        default: ''
+        type: string
       clean_cache_cmd:
         required: false
         default: ''
@@ -54,9 +58,8 @@ jobs:
             git checkout ${{ inputs.ref }}
             git pull
             
+            # Improve steps here to make it possible to install things, not just update
             # mysql -u root -p root -e "CREATE DATABASE IF NOT EXISTS officio.forms;"
-            # ./vendor/bin/phinx.bat migrate -c ./config/phinx.config.php
-            # rm -rf ./data/cache/*
             
             if [ -f "composer.json" ]; then
               if [ ! -f "composer.phar" ]; then
@@ -102,6 +105,8 @@ jobs:
                 break
               fi
             fi
+            
+            ${{ inputs.db_migration_cmd }}
             
             ${{ inputs.clean_cache_cmd }}
             
