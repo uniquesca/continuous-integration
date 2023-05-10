@@ -67,10 +67,16 @@ jobs:
             echo "always_auth=true" >> .npmrc
           fi
 
+      - name: Update package version
+        run: |
+          if [ -f "package.json" ]; then
+            npm pkg set version=${{ inputs.release_version }}
+          fi
+
       - name: Install NPM dependencies
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        run: npm install --no-dev
+        run: npm install
 
       - name: Run build command if specified
         run: ${{ inputs.build_cmd }}
