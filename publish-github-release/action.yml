@@ -8,7 +8,7 @@ inputs:
     required: false
     default: 'dist'
     type: string
-  UNIQUES_GITHUB_ACCESS_TOKEN:
+  repo_token:
     required: true
     type: string
 
@@ -21,7 +21,7 @@ runs:
 
     - uses: marvinpinto/action-automatic-releases@latest
       with:
-        repo_token: ${{ inputs.UNIQUES_GITHUB_ACCESS_TOKEN }}
+        repo_token: ${{ inputs.repo_token }}
         automatic_release_tag: ${{ inputs.release_version }}
         prerelease: false
         title: Release ${{ inputs.release_version }}

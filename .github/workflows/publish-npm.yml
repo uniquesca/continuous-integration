@@ -91,6 +91,6 @@ jobs:
       - uses: uniquesca/continuous-integration/publish-github-release@feature/publish-github-release
         if: ${{ inputs.github_release == true }}
         with:
-          release_version: 1.0.231
+          release_version: ${{ inputs.release_version }}
           dist_folder: 'dist'
-          UNIQUES_GITHUB_ACCESS_TOKEN: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+          repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
