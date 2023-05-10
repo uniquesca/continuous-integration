@@ -93,5 +93,5 @@ jobs:
         if: ${{ inputs.github_release == true }}
         with:
           release_version: ${{ inputs.release_version }}
-          dist_folder: 'dist'
+          dist_folder: ${{ inputs.dist_folder }}
           repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
