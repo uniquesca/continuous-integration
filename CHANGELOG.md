@@ -35,3 +35,8 @@
 
 * New: created `publish-github-release` action (#4) (81c862d by Ihor Ziubrovskyi)
 * Update: updated changelog generation to filter out "Authored-by" records
+
+## v1.1.5
+
+* Fix: fixed npm dependencies installation command in `publish-npm` workflow (bee5494 by George Shestayev)
+* Update: added step for updating npm package version to the `publish-npm` action (bee5494 by George Shestayev)
