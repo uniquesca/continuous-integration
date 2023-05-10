@@ -115,7 +115,7 @@ function normalizeGitLogRecord(gitLogRecord) {
 
     return messageParts.map(
         function (messagePart) {
-            if (messagePart.match(/Co-authored-by/i)) {
+            if (messagePart.match(/(Co)?-?authored-by/i)) {
                 return '';
             } else {
                 if (messagePart.match(/automatic commit/i) && author.match(/github actions/i)) {

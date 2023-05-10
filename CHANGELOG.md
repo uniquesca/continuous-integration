@@ -19,7 +19,7 @@
 ## v1.1.1
 
 * BREAKING: renamed inputs generate-coverage-badge and coverage-badge-file into generate_coverage_badge and 
-    coverage_badge_file for `qa-checks` workflow
+* coverage_badge_file for `qa-checks` workflow
 * Fix: added missing step input importing DB (includes new `db_dump_file` input) in `qa-checks` workflow
 
 ## v1.1.2
@@ -30,3 +30,8 @@
 ## v1.1.3
 
 * Update: added `db_migration_cmd` to `deploy` workflow
+
+## v1.1.4
+
+* New: created `publish-github-release` action (#4) (81c862d by Ihor Ziubrovskyi)
+* Update: updated changelog generation to filter out "Authored-by" records
