@@ -89,7 +89,7 @@ jobs:
           npm publish
 
       - name: Publish Github release
-        uses: uniquesca/continuous-integration/publish-github-release@feature/publish-github-release
+        uses: uniquesca/continuous-integration/publish-github-release@main
         if: ${{ inputs.github_release == true }}
         with:
           release_version: ${{ inputs.release_version }}
