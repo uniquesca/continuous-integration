@@ -33,5 +33,5 @@
 
 ## v1.1.4
 
-* Created `publish-github-release` action (#4) (81c862d by Ihor Ziubrovskyi)
-* Authored-by: Ihor Ziubrovskyi <ihor@uniques.ca> (81c862d by Ihor Ziubrovskyi)
+* New: created `publish-github-release` action (#4) (81c862d by Ihor Ziubrovskyi)
+* Update: updated changelog generation to filter out "Authored-by" records
