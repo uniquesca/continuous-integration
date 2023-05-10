@@ -1,0 +1,28 @@
+name: 'Publish Github Release'
+
+inputs:
+  release_version:
+    required: true
+    type: string
+  dist_folder:
+    required: false
+    default: 'dist'
+    type: string
+  repo_token:
+    required: true
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - uses: montudor/action-zip@v1
+      with:
+        args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
+
+    - uses: marvinpinto/action-automatic-releases@latest
+      with:
+        repo_token: ${{ inputs.repo_token }}
+        automatic_release_tag: ${{ inputs.release_version }}
+        prerelease: false
+        title: Release ${{ inputs.release_version }}
+        files: dist.zip

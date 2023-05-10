@@ -88,16 +88,10 @@ jobs:
         run: |
           npm publish
 
-      - uses: montudor/action-zip@v1
-        if: ${{ inputs.github_release == 'true' }}
+      - name: Publish Github release
+        uses: uniquesca/continuous-integration/publish-github-release@main
+        if: ${{ inputs.github_release == true }}
         with:
-          args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
-
-      - uses: marvinpinto/action-automatic-releases@latest
-        if: ${{ inputs.github_release == 'true' }}
-        with:
+          release_version: ${{ inputs.release_version }}
+          dist_folder: ${{ inputs.dist_folder }}
           repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
-          automatic_release_tag: ${{ inputs.release_version }}
-          prerelease: false
-          title: Release ${{ inputs.release_version }}
-          files: dist.zip
