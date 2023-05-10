@@ -26,3 +26,7 @@
 
 * BREAKING: renamed input use-db into use_db for `qa-checks` workflow
 * Update: updated steps naming in `qa-checks` workflow
+
+## v1.1.3
+
+* Update: added `db_migration_cmd` to `deploy` workflow
