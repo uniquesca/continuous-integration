@@ -8,20 +8,30 @@ on:
         required: true
     inputs:
       version:
+        description: 'Version being prepared, has to be in x.y.z format'
         required: true
         type: string
       generate_changelog:
+        description: 'Whether changelog should be generated for the new version'
         required: false
         default: true
         type: boolean
+      changelog_path:
+        description: 'Path to the changelog file. Ignored if `generate-changelog` intput is not set to `true`'
+        required: false
+        default: 'CHANGELOG.md'
+        type: string
       update_db:
+        description: 'Whether DB dump should be updated'
         required: false
         default: false
         type: boolean
       db_dump_path:
+        description: 'Path to the DB dump. Ignored if `update_db` input is not set to `true`'
         required: false
         type: string
       migration_command:
+        description: 'DB migration command to run. Ignored if `update_db` input is not set to `true`'
         required: false
         default: './vendor/bin/phinx migrate'
         type: string
@@ -50,6 +60,7 @@ jobs:
         if: ${{ inputs.generate_changelog == true }}
         uses: uniquesca/continuous-integration/update-changelog@main
         with:
+          changelog_path: ${{ inputs.changelog_path }}
           target_version: ${{ inputs.version }}
 
       - name: Install Composer dependencies
@@ -70,6 +81,10 @@ jobs:
         with:
           dump_file_path: ${{ inputs.db_dump_path }}
           db_name: mysql_test
+
+      - name: Run DB migration
+        if: ${{ inputs.update_db == true }}
+        run: ${{ inputs.migration_command }}
 
       - name: Export DB
         uses: uniquesca/continuous-integration/mysql-export@main

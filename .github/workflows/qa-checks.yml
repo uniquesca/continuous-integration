@@ -8,17 +8,21 @@ on:
         required: true
     inputs:
       use_db:
+        description: 'Whether a database is needed (for example for unit tests)'
         required: false
         default: false
         type: boolean
       db_dump_file:
+        description: 'Path to the DB dump file - ignored if `use_db` is not set to `true`'
         required: false
         type: string
       generate_coverage_badge:
+        description: 'Whether a unit test coverage badge needs to be generated and committed'
         required: false
         default: true
         type: boolean
       coverage_badge_file:
+        description: 'Path to a coverage badge file - ignored if `generate_coverage_badge` is not set to `true`'
         required: false
         default: 'coverage.svg'
         type: string

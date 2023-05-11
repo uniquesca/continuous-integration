@@ -11,30 +11,38 @@ on:
         required: true
     inputs:
       host:
+        description: 'Address of the server'
         required: true
         type: string
       username:
+        description: 'SSH login'
         required: true
         type: string
       port:
+        description: 'SSH password'
         required: false
         default: '22'
         type: string
       deployment_path:
+        description: 'Working directory of the project on the server'
         required: true
         type: string
       ref:
+        description: 'Git branch or tag to use for the project on the server'
         required: true
         type: string
       db_migration_cmd:
+        description: 'DB migration command to execute after git update is complete'
         required: false
         default: ''
         type: string
       clean_cache_cmd:
+        description: 'Command for clearing cache to execute after git update is complete'
         required: false
         default: ''
         type: string
       post_cmd:
+        description: 'Command to execute after deployment is complete'
         required: false
         default: ''
         type: string
