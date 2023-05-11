@@ -11,25 +11,31 @@ on:
         required: true
     inputs:
       node_version:
+        description: 'Node version to use for building and publishing the package'
         required: false
         type: number
         default: 16
       release_version:
+        description: 'Version being published, has to be in x.y.z format'
         required: true
         type: string
       build_cmd:
+        description: 'Command to use to build the package'
         required: false
         type: string
         default: ''
       github_release:
+        description: 'Whether github release should be published too'
         required: false
         default: true
         type: boolean
       dist_folder:
+        description: 'Dist folder to use for publishing'
         required: false
         default: 'dist'
         type: string
       cleanup_dependencies:
+        description: 'Whether dependencies should be removed from package.json prior to publishing'
         required: false
         type: boolean
         default: false
@@ -55,7 +61,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
-          key: ${{ runner.os }}-node-${{ hashFiles('package.json,package-lock.json') }}
+          key: ${{ runner.os }}-node-ci-publish-npm-${{ hashFiles('package.json,package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-node-
 

@@ -2,9 +2,11 @@ name: Update Changelog
 
 inputs:
   changelog_path:
+    description: 'Path to the changelog file'
     required: false
     default: 'CHANGELOG.md'
   target_version:
+    description: 'Version to add to the changelog'
     required: true
 runs:
   using: 'node16'

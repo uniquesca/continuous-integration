@@ -2,13 +2,16 @@ name: 'Publish Github Release'
 
 inputs:
   release_version:
+    description: 'Version being published, has to be in x.y.z format'
     required: true
     type: string
   dist_folder:
+    description: 'Dist folder to use for publishing'
     required: false
     default: 'dist'
     type: string
   repo_token:
+    description: 'GitHub access token with the access to publish package in the repository'
     required: true
     type: string
 
