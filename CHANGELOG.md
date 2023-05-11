@@ -40,3 +40,11 @@
 
 * Fix: fixed npm dependencies installation command in `publish-npm` workflow (bee5494 by George Shestayev)
 * Update: added step for updating npm package version to the `publish-npm` action (bee5494 by George Shestayev)
+
+## v1.1.6
+
+* New: added `changelog_path` input to the `prepare-release` workflow (548e407 by George Shestayev)
+* Update: added .editorconfig (f1d1af2 by George Shestayev)
+* Update: changed cache keys to be exclusive for ci action (f1d1af2 by George Shestayev)
+* Update: added descriptions for all inputs and secrets, updated documentation reference (548e407 by George Shestayev)
+* Removed: removed `ref` input from `mysql-export` workflow (548e407 by George Shestayev)
