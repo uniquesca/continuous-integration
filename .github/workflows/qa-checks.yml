@@ -80,7 +80,7 @@ jobs:
         with:
           path: |
             vendor
-          key: ${{ runner.os }}-composer-${{ hashFiles('composer.json,composer.lock') }}
+          key: ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-ci-qa-checks-${{ hashFiles('composer.json,composer.lock') }}
           restore-keys: |
             ${{ runner.os }}-composer-
 
