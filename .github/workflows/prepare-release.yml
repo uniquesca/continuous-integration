@@ -6,6 +6,9 @@ on:
       UNIQUES_GITHUB_ACCESS_TOKEN:
         description: 'Access token for cloning Uniques private repositories from GitHub'
         required: true
+      NODE_AUTH_TOKEN:
+        description: 'Access token for authentication with the NPM registry'
+        required: false
     inputs:
       version:
         description: 'Version being prepared, has to be in x.y.z format'
@@ -35,6 +38,16 @@ on:
         required: false
         default: './vendor/bin/phinx migrate'
         type: string
+      build_command:
+        description: 'Allows to perform a build as part of release preparation'
+        required: false
+        type: string
+        default: ''
+      build_path:
+        description: 'Allows to specify path to the build files for committing them'
+        required: false
+        type: string
+        default: ''
 
 jobs:
   prepare-release:
@@ -62,6 +75,16 @@ jobs:
         with:
           changelog_path: ${{ inputs.changelog_path }}
           target_version: ${{ inputs.version }}
+
+      - name: Cache Composer dependencies
+        id: cache-composer
+        uses: actions/cache@v3
+        with:
+          path: |
+            vendor
+          key: ${{ runner.os }}-composer-ci-prepare-release-${{ hashFiles('composer.json,composer.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-composer-ci-prepare-release-
 
       - name: Install Composer dependencies
         if: ${{ inputs.update_db == true }}
@@ -96,6 +119,49 @@ jobs:
       - name: Debug DB dump
         if: ${{ inputs.update_db == true }}
         run: cat ${{ inputs.db_dump_path }}
+
+      - name: Get NPM cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
+      - name: Cache NPM dependencies
+        id: cache-npm
+        uses: actions/cache@v3
+        with:
+          path: ${{ steps.npm-cache-dir.outputs.dir }}
+          key: ${{ runner.os }}-node-ci-prepare-release-${{ hashFiles('package.json,package-lock.json') }}
+          restore-keys: |
+            ${{ runner.os }}-node-ci-prepare-release-
+
+      - name: Prepare .npmrc file
+        run: |
+          if [ ! -f ".npmrc" ]; then
+            echo "@uniquesca:registry=https://npm.pkg.github.com" >> .npmrc
+            echo "//npm.pkg.github.com/:_authToken=${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}" >> .npmrc
+            echo "always_auth=true" >> .npmrc
+          fi
+
+      - name: Update package version
+        run: |
+          if [ -f "package.json" ]; then
+            npm pkg set version=${{ inputs.version }}
+          fi
+
+      - name: Install NPM dependencies
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
+        run: |
+          if [ -f "package.json" ]; then
+            npm install
+          fi
+
+      - name: Run Build
+        run: ${{ inputs.build_command }}
+
+      - name: Add build files to Git index
+        if: ${{ inputs.build_path != '' }}
+        run: git add ${{ inputs.build_path }}
 
       - name: Commit changes
         run: |

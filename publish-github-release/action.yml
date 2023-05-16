@@ -40,6 +40,10 @@ runs:
         changelog_path: '_github_ci_changelog.txt'
         target_version: ${{ inputs.release_version }}
 
+    - name: Debug changelog
+      run: cat _github_ci_changelog.txt
+      shell: bash
+
     - uses: softprops/action-gh-release@v1
       with:
         token: ${{ inputs.repo_token }}

@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - id: get_version
-        run: echo "version=$(echo ${GITHUB_REF#refs/heads/tags/})" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> "$GITHUB_OUTPUT"
 
       - uses: uniquesca/continuous-integration/publish-github-release@main
         with:
