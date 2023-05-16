@@ -58,3 +58,8 @@
 * Update: `update-changelog` action won't complain if changelog file doesn't exist (e0c12a8 by George Shestayev)
 * Update: `publish-github-release` will use `update-changelog` action in `raw` mode to retrieve body of the release (e0c12a8 by George Shestayev)
 * Update: changed actions used in `publish-github-release` - got rid of zip action, changed release to better supported (8ff9cf1 by George Shestayev)
+
+## v1.1.8
+
+* Fix: fixed bug in changelog processing
+* Fix: switch to proper access token for publishing releases
