@@ -136,7 +136,7 @@ function appendChangeLog(changelogContents, targetVersion) {
     const gitLog = getChangelog();
     changelogContents = changelogContents + "\n\n## v" + targetVersion + "\n\n";
     if (gitLog.length) {
-        changelogContents = changelogContents + gitLog() + "\n";
+        changelogContents = changelogContents + gitLog + "\n";
     }
     return changelogContents;
 }
