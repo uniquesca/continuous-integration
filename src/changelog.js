@@ -155,7 +155,7 @@ export function getChangelog() {
 }
 
 // Updates changelog file with the changes retrieved from git log
-export function updateChangelog(changelogPath, targetVersion, raw) {
+export function updateChangelog(changelogPath, targetVersion) {
     if (!validateVersion(targetVersion)) {
         console.error('Target version ' + targetVersion + ' does not seem to be correct version.');
         process.exit(1);

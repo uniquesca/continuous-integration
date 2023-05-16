@@ -66,8 +66,16 @@
 
 ## v1.1.9
 
-New: added `build_command` and `build_path` inputs to `prepare-release` workflow
-New: added NODE_AUTH_TOKEN secret to `prepare-release` workflow
-New: `prepare-release` workflow will install npm and composer dependencies always, so the building process can use them
-Update: improved caching Composer and NPM dependencies in `prepare-release`, `publish-npm` and `qa-checks` workflows
-Update: improved triggers for self-prepare-release workflow
+* New: added `build_command` and `build_path` inputs to `prepare-release` workflow
+* New: added NODE_AUTH_TOKEN secret to `prepare-release` workflow
+* New: `prepare-release` workflow will install npm and composer dependencies always, so the building process can use them
+* Update: improved caching Composer and NPM dependencies in `prepare-release`, `publish-npm` and `qa-checks` workflows
+* Update: improved triggers for self-prepare-release workflow
+
+## v1.1.10
+
+* Fix: fixed job name in `publish-npm` workflow (a7640a4 by George Shestayev)
+* Update: added additional output for `update-changelog` action to ease up debugging (ed051c4 by George Shestayev)
+* Update: added .gitattributes file (7d5307c by George Shestayev)
+* Update: cleaning git before committing updates on release preparation (7d5307c by George Shestayev)
+* Improved code for changelog generation on github release publication (#5) (7d5307c by George Shestayev)

@@ -10,9 +10,13 @@ if (!changelogPath || !targetVersion) {
     process.exit(1);
 }
 
+console.log(raw);
 if (raw == 'true' || raw == '1') {
+    console.log('Generating raw changelog...')
     const changelog = getChangelog();
+    console.log(changelog)
     fs.writeFileSync(changelogPath, changelog);
 } else {
-    updateChangelog(changelogPath, targetVersion, raw);
+    console.log('Updating changelog in normal (non-raw) mode...')
+    updateChangelog(changelogPath, targetVersion);
 }
