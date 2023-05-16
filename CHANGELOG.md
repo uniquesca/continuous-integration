@@ -63,3 +63,11 @@
 
 * Fix: fixed bug in changelog processing
 * Fix: switch to proper access token for publishing releases
+
+## v1.1.9
+
+New: added `build_command` and `build_path` inputs to `prepare-release` workflow
+New: added NODE_AUTH_TOKEN secret to `prepare-release` workflow
+New: `prepare-release` workflow will install npm and composer dependencies always, so the building process can use them
+Update: improved caching Composer and NPM dependencies in `prepare-release`, `publish-npm` and `qa-checks` workflows
+Update: improved triggers for self-prepare-release workflow

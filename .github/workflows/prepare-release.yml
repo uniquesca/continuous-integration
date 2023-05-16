@@ -120,6 +120,11 @@ jobs:
         if: ${{ inputs.update_db == true }}
         run: cat ${{ inputs.db_dump_path }}
 
+      - name: Get NPM cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
       - name: Cache NPM dependencies
         id: cache-npm
         uses: actions/cache@v3
@@ -140,13 +145,12 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
-            npm pkg set version=${{ inputs.release_version }}
+            npm pkg set version=${{ inputs.version }}
           fi
 
       - name: Install NPM dependencies
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        if: steps.cache-npm.outputs.cache-hit != 'true'
         run: |
           if [ -f "package.json" ]; then
             npm install

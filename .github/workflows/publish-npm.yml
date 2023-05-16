@@ -80,7 +80,6 @@ jobs:
           fi
 
       - name: Install NPM dependencies
-        if: steps.cache-npm.outputs.cache-hit != 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: npm install
