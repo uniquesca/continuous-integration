@@ -105,5 +105,6 @@ jobs:
         if: ${{ inputs.github_release == true }}
         with:
           release_version: ${{ inputs.release_version }}
+          attach_dist: true
           dist_folder: ${{ inputs.dist_folder }}
           repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}

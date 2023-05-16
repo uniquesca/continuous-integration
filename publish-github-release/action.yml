@@ -5,8 +5,13 @@ inputs:
     description: 'Version being published, has to be in x.y.z format'
     required: true
     type: string
+  attach_dist:
+    description: 'Whether a compressed dist folder should be attached to the release'
+    required: false
+    type: bool
+    default: false
   dist_folder:
-    description: 'Dist folder to use for publishing'
+    description: 'Dist folder to use for publishing. Ignored if attach_dist input is not set to `true`'
     required: false
     default: 'dist'
     type: string
@@ -15,17 +20,21 @@ inputs:
     required: true
     type: string
 
+env:
+  FILES: ''
+
 runs:
   using: "composite"
   steps:
-    - uses: montudor/action-zip@v1
-      with:
-        args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
+    - if: ${{ inputs.attach_dist == true }}
+      run: |
+        zip -qq -r dist.zip ${{ inputs.dist_folder }}
+        echo "FILES=dist.zip" >> "$GITHUB_ENV"
 
-    - uses: marvinpinto/action-automatic-releases@latest
+    - uses: softprops/action-gh-release@v1
       with:
-        repo_token: ${{ inputs.repo_token }}
-        automatic_release_tag: ${{ inputs.release_version }}
+        token: ${{ inputs.repo_token }}
+        tag_name: ${{ inputs.release_version }}
         prerelease: false
-        title: Release ${{ inputs.release_version }}
-        files: dist.zip
+        name: Release ${{ inputs.release_version }}
+        files: ${{ env.FILES }}
