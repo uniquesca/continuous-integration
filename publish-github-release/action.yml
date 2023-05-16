@@ -31,10 +31,19 @@ runs:
       run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
+        echo "ls -al"
+
+    - name: Generate changelog for the release
+      uses: uniquesca/continuous-integration/update-changelog@develop
+      with:
+        raw: true
+        changelog_path: '_github_ci_changelog.txt'
+        target_version: ${{ inputs.release_version }}
 
     - uses: softprops/action-gh-release@v1
       with:
         token: ${{ inputs.repo_token }}
+        body_path: '_github_ci_changelog.txt'
         tag_name: ${{ inputs.release_version }}
         prerelease: false
         name: Release ${{ inputs.release_version }}

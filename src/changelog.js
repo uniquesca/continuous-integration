@@ -133,10 +133,10 @@ function normalizeGitLogRecord(gitLogRecord) {
 }
 
 function appendChangeLog(changelogContents, targetVersion) {
-    const gitLog = getGitLogSinceLastTag();
+    const gitLog = getChangelog();
     changelogContents = changelogContents + "\n\n## v" + targetVersion + "\n\n";
     if (gitLog.length) {
-        changelogContents = changelogContents + normalizeGitLog(gitLog) + "\n";
+        changelogContents = changelogContents + gitLog() + "\n";
     }
     return changelogContents;
 }
@@ -144,14 +144,20 @@ function appendChangeLog(changelogContents, targetVersion) {
 function validateVersion(version) {
     return /^\d+\.\d+\.\d+$/.test(version);
 }
-export function updateChangelog(changelogPath, targetVersion) {
+
+// Retrieves changes from git log since the last tag and formats the list
+export function getChangelog() {
+    let gitLog = getGitLogSinceLastTag();
+    if (gitLog.length) {
+        gitLog = normalizeGitLog(gitLog);
+    }
+    return gitLog;
+}
+
+// Updates changelog file with the changes retrieved from git log
+export function updateChangelog(changelogPath, targetVersion, raw) {
     if (!validateVersion(targetVersion)) {
         console.error('Target version ' + targetVersion + ' does not seem to be correct version.');
-        process.exit(1);
-    }
-
-    if (!fs.existsSync(changelogPath)) {
-        console.error('Changelog file ' + changelogPath + ' not found.');
         process.exit(1);
     }
 
