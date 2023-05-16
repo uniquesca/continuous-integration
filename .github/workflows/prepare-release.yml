@@ -120,6 +120,11 @@ jobs:
         if: ${{ inputs.update_db == true }}
         run: cat ${{ inputs.db_dump_path }}
 
+      - name: Get NPM cache directory
+        id: npm-cache-dir
+        shell: bash
+        run: echo "dir=$(npm config get cache)" >> ${GITHUB_OUTPUT}
+
       - name: Cache NPM dependencies
         id: cache-npm
         uses: actions/cache@v3
