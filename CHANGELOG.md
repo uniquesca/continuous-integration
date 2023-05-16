@@ -48,3 +48,13 @@
 * Update: changed cache keys to be exclusive for ci action (f1d1af2 by George Shestayev)
 * Update: added descriptions for all inputs and secrets, updated documentation reference (548e407 by George Shestayev)
 * Removed: removed `ref` input from `mysql-export` workflow (548e407 by George Shestayev)
+
+## v1.1.7
+
+* Fix: removing input types in the actions as types are not supported (45e1e55 by George Shestayev)
+* New: introduced `raw` mode in update-changelog action allowing to just retrieve list of changes (e0c12a8 by George Shestayev)
+* New: introduced `attach_dist` input in `publish-github-release` action (8ff9cf1 by George Shestayev)
+* New: introduced self workflow to publish releases for the `continuous-integration` repo
+* Update: `update-changelog` action won't complain if changelog file doesn't exist (e0c12a8 by George Shestayev)
+* Update: `publish-github-release` will use `update-changelog` action in `raw` mode to retrieve body of the release (e0c12a8 by George Shestayev)
+* Update: changed actions used in `publish-github-release` - got rid of zip action, changed release to better supported (8ff9cf1 by George Shestayev)

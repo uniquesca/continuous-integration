@@ -4,28 +4,47 @@ inputs:
   release_version:
     description: 'Version being published, has to be in x.y.z format'
     required: true
-    type: string
+  attach_dist:
+    description: 'Whether a compressed dist folder should be attached to the release'
+    required: false
+    default: 'false'
   dist_folder:
-    description: 'Dist folder to use for publishing'
+    description: 'Dist folder to use for publishing. Ignored if attach_dist input is not set to `true`'
     required: false
     default: 'dist'
-    type: string
   repo_token:
     description: 'GitHub access token with the access to publish package in the repository'
     required: true
-    type: string
+
+env:
+  FILES: ''
 
 runs:
   using: "composite"
   steps:
-    - uses: montudor/action-zip@v1
+    - name: Checkout
+      uses: actions/checkout@v3
       with:
-        args: zip -qq -r dist.zip ${{ inputs.dist_folder }}
+        fetch-depth: 0
 
-    - uses: marvinpinto/action-automatic-releases@latest
+    - run: |
+        zip -qq -r dist.zip ${{ inputs.dist_folder }}
+        echo "FILES=dist.zip" >> "$GITHUB_ENV"
+      if: ${{ inputs.attach_dist == 'true' }}
+      shell: bash
+
+    - name: Generate changelog for the release
+      uses: uniquesca/continuous-integration/update-changelog@main
       with:
-        repo_token: ${{ inputs.repo_token }}
-        automatic_release_tag: ${{ inputs.release_version }}
+        raw: true
+        changelog_path: '_github_ci_changelog.txt'
+        target_version: ${{ inputs.release_version }}
+
+    - uses: softprops/action-gh-release@v1
+      with:
+        token: ${{ inputs.repo_token }}
+        body_path: '_github_ci_changelog.txt'
+        tag_name: ${{ inputs.release_version }}
         prerelease: false
-        title: Release ${{ inputs.release_version }}
-        files: dist.zip
+        name: Release ${{ inputs.release_version }}
+        files: ${{ env.FILES }}
