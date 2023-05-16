@@ -30,12 +30,11 @@ runs:
     - run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
-        echo ${{ inputs.attach_dist }}
       if: ${{ inputs.attach_dist == 'true' }}
       shell: bash
 
     - name: Generate changelog for the release
-      uses: uniquesca/continuous-integration/update-changelog@feature/improve-github-release
+      uses: uniquesca/continuous-integration/update-changelog@main
       with:
         raw: true
         changelog_path: '_github_ci_changelog.txt'
