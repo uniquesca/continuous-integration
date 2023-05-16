@@ -11,7 +11,7 @@ inputs:
   raw:
     description: 'In raw mode normalization of the changelog file will be skipped'
     required: false
-    default: false
+    default: 'false'
 runs:
   using: 'node16'
   main: 'index.js'

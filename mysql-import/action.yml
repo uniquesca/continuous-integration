@@ -4,31 +4,25 @@ inputs:
   dump_file_path:
     description: 'Path to the DB dump'
     required: true
-    type: string
   db_name:
     description: 'DB name to export dump from'
     required: true
-    type: string
   host:
     description: 'MySQL server address'
     required: false
     default: 'localhost'
-    type: string
   username:
     description: 'MySQL server username'
     required: false
     default: 'root'
-    type: string
   password:
     description: 'MySQL server password'
     required: false
     default: 'root'
-    type: string
   port:
     description: 'MySQL port'
     required: false
     default: '3306'
-    type: string
 
 runs:
   using: "composite"

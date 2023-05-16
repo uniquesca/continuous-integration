@@ -10,7 +10,7 @@ if (!changelogPath || !targetVersion) {
     process.exit(1);
 }
 
-if (raw) {
+if (raw == 'true' || raw == '1') {
     const changelog = getChangelog();
     fs.writeFileSync(changelogPath, changelog);
 } else {

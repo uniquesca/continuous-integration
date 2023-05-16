@@ -4,21 +4,17 @@ inputs:
   release_version:
     description: 'Version being published, has to be in x.y.z format'
     required: true
-    type: string
   attach_dist:
     description: 'Whether a compressed dist folder should be attached to the release'
     required: false
-    type: bool
-    default: false
+    default: 'false'
   dist_folder:
     description: 'Dist folder to use for publishing. Ignored if attach_dist input is not set to `true`'
     required: false
     default: 'dist'
-    type: string
   repo_token:
     description: 'GitHub access token with the access to publish package in the repository'
     required: true
-    type: string
 
 env:
   FILES: ''
@@ -26,15 +22,19 @@ env:
 runs:
   using: "composite"
   steps:
-    - if: ${{ inputs.attach_dist == true }}
-      shell: bash
-      run: |
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
-        echo "ls -al"
+      if: ${{ inputs.attach_dist == 'true' }}
+      shell: bash
 
     - name: Generate changelog for the release
-      uses: uniquesca/continuous-integration/update-changelog@develop
+      uses: uniquesca/continuous-integration/update-changelog@main
       with:
         raw: true
         changelog_path: '_github_ci_changelog.txt'
