@@ -82,7 +82,7 @@ jobs:
             vendor
           key: ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-ci-qa-checks-${{ hashFiles('composer.json,composer.lock') }}
           restore-keys: |
-            ${{ runner.os }}-composer-
+            ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-
 
       - name: Install Composer dependencies
         if: steps.cache-composer.outputs.cache-hit != 'true'

@@ -63,7 +63,7 @@ jobs:
           path: ${{ steps.npm-cache-dir.outputs.dir }}
           key: ${{ runner.os }}-node-ci-publish-npm-${{ hashFiles('package.json,package-lock.json') }}
           restore-keys: |
-            ${{ runner.os }}-node-
+            ${{ runner.os }}-node-ci-publish-npm-
 
       - name: Prepare .npmrc file
         run: |
@@ -80,6 +80,7 @@ jobs:
           fi
 
       - name: Install NPM dependencies
+        if: steps.cache-npm.outputs.cache-hit != 'true'
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
         run: npm install
