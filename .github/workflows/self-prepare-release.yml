@@ -11,8 +11,7 @@ jobs:
       version: ${{ steps.get_version.outputs.version}}
     steps:
       - id: get_version
-        run: |
-          echo "version=$(echo ${GITHUB_REF#refs/heads/release/})" >> "$GITHUB_OUTPUT"
+        run: echo "version=$(echo ${GITHUB_REF#refs/heads/release/})" >> "$GITHUB_OUTPUT"
 
   pre-release:
     if: startsWith(github.ref, 'refs/heads/release/')
