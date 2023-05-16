@@ -2,8 +2,6 @@ name: Publish GitHub Release
 
 on:
   push:
-    branches:
-      - 'feature/fix-changelog-update'
     tags:
       - '*'
 
@@ -11,24 +9,8 @@ jobs:
   publish-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-        with:
-          fetch-depth: 0
-
       - id: get_version
         run: echo "version=$(echo ${GITHUB_REF#refs/tags/})" >> "$GITHUB_OUTPUT"
-
-      - name: Generate changelog for the release
-        uses: uniquesca/continuous-integration/update-changelog@main
-        with:
-          raw: true
-          changelog_path: '_github_ci_changelog.txt'
-          target_version: '1.1.10'
-
-      - name: Debug changelog
-        run: cat _github_ci_changelog.txt
-        shell: bash
 
       - uses: uniquesca/continuous-integration/publish-github-release@main
         with:
