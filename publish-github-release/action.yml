@@ -31,7 +31,7 @@ runs:
       run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
-        echo "ls -al"
+        ls -al
 
     - name: Generate changelog for the release
       uses: uniquesca/continuous-integration/update-changelog@develop
