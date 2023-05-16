@@ -8,10 +8,14 @@ inputs:
   target_version:
     description: 'Version to add to the changelog'
     required: true
-  raw:
-    description: 'In raw mode normalization of the changelog file will be skipped'
+  mode:
+    description: 'Can be "normal" or "raw". Latter one will simply yield changelog with no file normalization'
     required: false
-    default: 'false'
+    default: 'normal'
+  offset:
+    description: 'Offset for the start tag to get changelog since'
+    required: false
+    default: '0'
 runs:
   using: 'node16'
   main: 'index.js'
