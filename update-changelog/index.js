@@ -10,7 +10,7 @@ if (!changelogPath || !targetVersion) {
     process.exit(1);
 }
 
-console.log(raw)
+console.log(raw);
 if (raw == 'true' || raw == '1') {
     console.log('Generating raw changelog...')
     const changelog = getChangelog();
