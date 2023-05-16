@@ -31,11 +31,11 @@ runs:
       with:
         fetch-depth: 0
 
-    - if: ${{ inputs.attach_dist == true }}
-      shell: bash
-      run: |
+    - run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
+        echo ${{ inputs.attach_dist }}
+      shell: bash
 
     - run: ls -al
       shell: bash
