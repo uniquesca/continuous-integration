@@ -79,3 +79,8 @@
 * Update: added .gitattributes file (7d5307c by George Shestayev)
 * Update: cleaning git before committing updates on release preparation (7d5307c by George Shestayev)
 * Improved code for changelog generation on github release publication (#5) (7d5307c by George Shestayev)
+
+## v1.1.11
+
+* Fix: fixed `publish-github-release` to properly retrieve changelog (b858448 by George Shestayev)
+* Update: improved `update-changelog` action to allow changelog retrieval between any two tags (b858448 by George Shestayev)

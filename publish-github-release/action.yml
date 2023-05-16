@@ -36,7 +36,8 @@ runs:
     - name: Generate changelog for the release
       uses: uniquesca/continuous-integration/update-changelog@main
       with:
-        raw: true
+        mode: 'raw'
+        offset: 1
         changelog_path: '_github_ci_changelog.txt'
         target_version: ${{ inputs.release_version }}
 

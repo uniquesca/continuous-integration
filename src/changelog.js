@@ -43,10 +43,8 @@ function normalizeChangelog(changelogContents) {
     return changelogContents;
 }
 
-function getGitLogSinceLastTag() {
-    const lastVersionCommand = "git describe --abbrev=0 --tags";
-    const lastVersion = cp.execSync(lastVersionCommand);
-    const command = "git log --no-merges " + lastVersion.toString().trim() + "..HEAD --pretty=format:'%B||%h||%an||EOR'";
+function getGitLog(fromTag, toTag) {
+    const command = "git log --no-merges " + fromTag + ".." + toTag + " --pretty=format:'%B||%h||%an||EOR'";
     const result = cp.spawnSync('sh', ['-c', command]);
     return result.stdout.toString();
 }
@@ -132,8 +130,9 @@ function normalizeGitLogRecord(gitLogRecord) {
     );
 }
 
-function appendChangeLog(changelogContents, targetVersion) {
-    const gitLog = getChangelog();
+function appendChangeLog(changelogContents, targetVersion, fromTag, toTag) {
+    // TODO Improve this allowing to properly print changelog for every tag
+    const gitLog = generateChangelog(fromTag, toTag);
     changelogContents = changelogContents + "\n\n## v" + targetVersion + "\n\n";
     if (gitLog.length) {
         changelogContents = changelogContents + gitLog + "\n";
@@ -146,8 +145,8 @@ function validateVersion(version) {
 }
 
 // Retrieves changes from git log since the last tag and formats the list
-export function getChangelog() {
-    let gitLog = getGitLogSinceLastTag();
+export function generateChangelog(fromTag, toTag) {
+    let gitLog = getGitLog(fromTag, toTag);
     if (gitLog.length) {
         gitLog = normalizeGitLog(gitLog);
     }
@@ -155,7 +154,7 @@ export function getChangelog() {
 }
 
 // Updates changelog file with the changes retrieved from git log
-export function updateChangelog(changelogPath, targetVersion) {
+export function updateChangelog(changelogPath, targetVersion, fromTag, toTag) {
     if (!validateVersion(targetVersion)) {
         console.error('Target version ' + targetVersion + ' does not seem to be correct version.');
         process.exit(1);
@@ -164,7 +163,7 @@ export function updateChangelog(changelogPath, targetVersion) {
     let changelogContents = fs.readFileSync(changelogPath).toString();
     changelogContents = cleanupChangelogIfAlreadyHasTargetVersion(changelogContents, targetVersion);
     changelogContents = normalizeChangelog(changelogContents);
-    changelogContents = appendChangeLog(changelogContents, targetVersion);
+    changelogContents = appendChangeLog(changelogContents, targetVersion, fromTag, toTag);
 
     fs.writeFileSync(changelogPath, changelogContents);
 }
