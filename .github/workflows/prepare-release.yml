@@ -151,7 +151,6 @@ jobs:
       - name: Install NPM dependencies
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NODE_AUTH_TOKEN }}
-        if: steps.cache-npm.outputs.cache-hit != 'true'
         run: |
           if [ -f "package.json" ]; then
             npm install
