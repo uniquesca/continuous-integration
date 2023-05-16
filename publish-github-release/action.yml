@@ -26,12 +26,19 @@ env:
 runs:
   using: "composite"
   steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
     - if: ${{ inputs.attach_dist == true }}
       shell: bash
       run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
-        ls -al
+
+    - run: ls -al
+      shell: bash
 
     - name: Generate changelog for the release
       uses: uniquesca/continuous-integration/update-changelog@feature/improve-github-release
