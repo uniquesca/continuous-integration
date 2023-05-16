@@ -74,7 +74,6 @@
 
 ## v1.1.10
 
-* Fix: minor syntax fix (2ee2d72 by George Shestayev)
 * Fix: fixed job name in `publish-npm` workflow (a7640a4 by George Shestayev)
 * Update: added additional output for `update-changelog` action to ease up debugging (ed051c4 by George Shestayev)
 * Update: added .gitattributes file (7d5307c by George Shestayev)
