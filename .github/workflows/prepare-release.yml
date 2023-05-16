@@ -145,7 +145,7 @@ jobs:
       - name: Update package version
         run: |
           if [ -f "package.json" ]; then
-            npm pkg set version=${{ inputs.release_version }}
+            npm pkg set version=${{ inputs.version }}
           fi
 
       - name: Install NPM dependencies
