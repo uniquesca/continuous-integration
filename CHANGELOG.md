@@ -48,3 +48,19 @@
 * Update: changed cache keys to be exclusive for ci action (f1d1af2 by George Shestayev)
 * Update: added descriptions for all inputs and secrets, updated documentation reference (548e407 by George Shestayev)
 * Removed: removed `ref` input from `mysql-export` workflow (548e407 by George Shestayev)
+
+## v1.1.7
+
+* Fix: removing input types in the actions as types are not supported (45e1e55 by George Shestayev)
+* Fix: fixed `publish-github-release` action to handle `attach_dist` input properly (45e1e55 by George Shestayev)
+* Fix: adding checkout step to the `publish-github-release` branch (32aa8a5 by George Shestayev)
+* Fix: fixed missing `shell` property in the first step in `publish-github-release` action (409381c by George Shestayev)
+* New: introduced `raw` mode in update-changelog action allowing to just retrieve list of changes (e0c12a8 by George Shestayev)
+* New: introduced `attach_dist` input in `publish-github-release` action (8ff9cf1 by George Shestayev)
+* Update: `update-changelog` action won't complain if changelog file doesn't exist (e0c12a8 by George Shestayev)
+* Update: `publish-github-release` will use `update-changelog` action in `raw` mode to retrieve body of the release (e0c12a8 by George Shestayev)
+* Update: changed actions used in `publish-github-release` - got rid of zip action, changed release to better supported (8ff9cf1 by George Shestayev)
+* Tmp: removing tmp changes (72746ba by George Shestayev)
+* Tmp: debugging missing zip step (2a10798 by George Shestayev)
+* Tmp: switching branches for testing (d003527 by George Shestayev)
+* Tmp: adding debug output (44bf304 by George Shestayev)
