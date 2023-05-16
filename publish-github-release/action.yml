@@ -34,7 +34,7 @@ runs:
         ls -al
 
     - name: Generate changelog for the release
-      uses: uniquesca/continuous-integration/update-changelog@develop
+      uses: uniquesca/continuous-integration/update-changelog@feature/improve-github-release
       with:
         raw: true
         changelog_path: '_github_ci_changelog.txt'
