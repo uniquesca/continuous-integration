@@ -27,6 +27,7 @@ runs:
   using: "composite"
   steps:
     - if: ${{ inputs.attach_dist == true }}
+      shell: bash
       run: |
         zip -qq -r dist.zip ${{ inputs.dist_folder }}
         echo "FILES=dist.zip" >> "$GITHUB_ENV"
