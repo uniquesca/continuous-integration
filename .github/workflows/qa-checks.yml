@@ -26,16 +26,20 @@ on:
         required: false
         default: 'coverage.svg'
         type: string
-      exec_bit_check_path:
-        description: 'Path to use for checking files for executability. Format compatible with linux `find` command, 
-          parameter `path`. Check ignored if empty string provided'
+      exec_bit_check:
+        description: 'Whether execution bit check should be performed'
+        required: false
+        default: false
+        type: boolean
+      exec_bit_check_paths:
+        description: 'Paths to use for checking files for executability, split by comma. Example: "module, vendor/bin"'
         required: false
         default: ''
         type: string
-      exec_bit_check_filename:
-        description: 'File name to check for executability. Format compatible with linux `find` command, parameter `name`'
+      exec_bit_check_extensions:
+        description: 'File extensions to check for executability, split by comma. Example: "sh, php"'
         required: false
-        default: '*.sh'
+        default: 'sh'
         type: string
 
 jobs:
@@ -151,10 +155,25 @@ jobs:
           fi
 
       - name: Check execution bits
-        if: inputs.exec_bit_check_path != ''
+        if: inputs.exec_bit_check == true
         run: |
           CHECK_PASSED=true
-          find . -path "${{ inputs.exec_bit_check_path }}" -type f -name "${{ inputs.exec_bit_check_filename }}" | while read file; do
+          
+          FOLDERS=${{ inputs.exec_bit_check_paths }}
+          FOLDERS=${FOLDERS// /}
+          FOLDERS=${FOLDERS//,/\|}
+          if [ -z "$FOLDERS" ]; then
+            FOLDERS=".*"
+          fi
+          
+          EXTENSIONS=${{ inputs.exec_bit_check_extensions }}
+          EXTENSIONS=${EXTENSIONS// /}
+          EXTENSIONS=${EXTENSIONS//,/\|}
+          if [ -z "$EXTENSIONS" ]; then
+            EXTENSIONS=".*"
+          fi
+          
+          find . -type f -regextype posix-extended "\.\/($FOLDERS)\/.*\.($EXTENSIONS)" | while read file; do
           if [ ! -x "$file" ]; then
             echo "$file is not executable"
             CHECK_PASSED=false
