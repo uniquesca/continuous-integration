@@ -26,6 +26,17 @@ on:
         required: false
         default: 'coverage.svg'
         type: string
+      exec_bit_check_path:
+        description: 'Path to use for checking files for executability. Format compatible with linux `find` command, 
+          parameter `path`. Check ignored if empty string provided'
+        required: false
+        default: ''
+        type: string
+      exec_bit_check_filename:
+        description: 'File name to check for executability. Format compatible with linux `find` command, parameter `name`'
+        required: false
+        default: '*.sh'
+        type: string
 
 jobs:
   matrix:
@@ -137,4 +148,17 @@ jobs:
             ./vendor/bin/psalm --show-info=true
           else
             echo "No Psalm configuration file found, skipping code check."
+          fi
+
+      - name: Check execution bits
+        if: inputs.exec_bit_check_path != ''
+        run: |
+          CHECK_PASSED=true
+          find . -path "${{ inputs.exec_bit_check_path }}" -type f -name "${{ inputs.exec_bit_check_filename }}" | while read file; do
+          if [ ! -x "$file" ]; then
+            echo "$file is not executable"
+            CHECK_PASSED=false
+          fi
+          if [ $CHECK_PASSED ]; then
+            exit 1
           fi
