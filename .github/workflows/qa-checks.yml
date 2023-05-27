@@ -181,3 +181,4 @@ jobs:
           if ! $CHECK_PASSED ; then
             exit 1
           fi
+        shell: bash
