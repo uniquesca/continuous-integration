@@ -154,6 +154,10 @@ jobs:
             echo "No Psalm configuration file found, skipping code check."
           fi
 
+      - name: Remove execute
+        run: |
+          chmod -x test.sh    
+          ls -al
       - name: Check execution bits
         if: inputs.exec_bit_check == true
         run: |
