@@ -73,7 +73,7 @@ jobs:
         with:
           php-version: ${{ matrix.setup.php.version }}
           extensions: ${{ matrix.setup.php.extensions }}
-        ini-values: xdebug.mode="coverage"
+        #ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
 
