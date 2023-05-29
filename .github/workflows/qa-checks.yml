@@ -185,7 +185,7 @@ jobs:
             CHECK_PASSED=false
           fi
           done
-          if ! $CHECK_PASSED ; then
+          if $CHECK_PASSED ; then
             exit 1
           fi
         shell: bash
