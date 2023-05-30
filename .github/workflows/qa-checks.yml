@@ -76,7 +76,7 @@ jobs:
 #          extensions: ${{ matrix.setup.php.extensions }}
 #        #ini-values: xdebug.mode="coverage"
 #
-#      - uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 #
 #      - name: Set up MySQL
 #        if: ${{ inputs.use_db == true }}
