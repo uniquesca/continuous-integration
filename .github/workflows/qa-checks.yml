@@ -168,10 +168,10 @@ jobs:
           FOLDERS="${{ inputs.exec_bit_check_paths }}"
           
           # Adding comma at the beginning and the end
-          # FOLDERS=",$FOLDERS,"
+          FOLDERS=",$FOLDERS,"
           
           # Remove double commas
-          # FOLDERS=${FOLDERS//,,/,}
+          FOLDERS=${FOLDERS//,,/,}
           
           # Search in root if ,., is specified
           if [[ "$FOLDERS" == *,.,* ]]; then
@@ -221,12 +221,10 @@ jobs:
             REGEX="$REGEX|\.\/[^\/]*(sh)"
           fi
           
-          #echo "$REGEX"
+          echo "$REGEX"
           
-          #find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
-          find . -type f -regextype posix-extended -regex "\.\/($FOLDERS)\/.*\.($EXTENSIONS)|\.\/[^\/]*($EXTENSIONS)" | while read file; do
-
-            echo "$REGEX" 
+          find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
+            echo "$file"
             if [ ! -x "$file" ]; then
               echo "$file is not executable"
               CHECK_PASSED=false
@@ -237,3 +235,4 @@ jobs:
             exit 1
           fi
         shell: bash
+
