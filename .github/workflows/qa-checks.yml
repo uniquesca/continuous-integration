@@ -223,8 +223,8 @@ jobs:
           
           #echo "$REGEX"
           
-          find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
-          #find . -type f -regextype posix-extended -regex "\.\/($FOLDERS)\/.*\.($EXTENSIONS)|\.\/[^\/]*($EXTENSIONS)" | while read file; do
+          #find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
+          find . -type f -regextype posix-extended -regex "\.\/($FOLDERS)\/.*\.($EXTENSIONS)|\.\/[^\/]*($EXTENSIONS)" | while read file; do
 
             echo "$REGEX" 
             if [ ! -x "$file" ]; then
