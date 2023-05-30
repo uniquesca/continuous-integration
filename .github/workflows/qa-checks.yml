@@ -224,7 +224,6 @@ jobs:
           echo "$REGEX"
           
           find . -type f -regextype posix-extended -regex "REGEX" | while read file; do
-            echo "$REGEX" . 12345
             if [ ! -x "$file" ]; then
               echo "$file is not executable"
               CHECK_PASSED=false
