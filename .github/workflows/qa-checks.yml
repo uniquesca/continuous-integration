@@ -184,11 +184,6 @@ jobs:
             SEARCH_IN_ROOT=false
           fi
           
-          if [[ "$FOLDERS" == ".*" ]]; then
-            echo 54321
-            SEARCH_IN_ROOT=true
-          fi
-          
           # Replace slashes with escaped slashes
           FOLDERS=${FOLDERS//\//\\/}
           
@@ -223,6 +218,10 @@ jobs:
           if [ -z "$EXTENSIONS" ]; then
             # No extensions specified, looking for all
             EXTENSIONS=".*"
+          fi
+          
+          if [ "$FOLDERS" == ".*" ]; then
+            SEARCH_IN_ROOT=true
           fi
           
           REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
