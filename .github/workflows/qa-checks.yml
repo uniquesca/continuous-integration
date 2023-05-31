@@ -215,10 +215,10 @@ jobs:
             EXTENSIONS=".*"
           fi
           
-          REGEX="^\.\/($FOLDERS).*\.($EXTENSIONS)"
+          REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
           
           if [ $SEARCH_IN_ROOT == true ]; then
-            REGEX="$REGEX|^\.\/[^/]*(sh)"
+            REGEX="$REGEX|\.\/[^\/]*(sh)"
           fi
           
           echo "$REGEX"
