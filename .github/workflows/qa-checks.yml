@@ -182,7 +182,6 @@ jobs:
             SEARCH_IN_ROOT=false
           fi
           
-          echo "$FOLDERS"
           # Replace slashes with escaped slashes
           FOLDERS=${FOLDERS//\//\\/}
           
@@ -202,6 +201,12 @@ jobs:
           
           # Remove the first and the last comma
           EXTENSIONS=${EXTENSIONS:1:-1}
+          
+          # Remove spaces
+          FOLDERS=${FOLDERS// /}
+          # Replace comma with slash and vertical separator
+          FOLDERS=${FOLDERS//,/\/\|}
+          echo "$FOLDERS"
           
           if [ -z "$FOLDERS" ]; then
             # No folders specified
