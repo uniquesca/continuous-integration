@@ -18,3 +18,4 @@ runs:
   steps:
     - name: Check execution bits
       run: ${{ github.action_path }}/src/bash.exec.sh
+      shell: bash
