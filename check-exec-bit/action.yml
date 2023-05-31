@@ -18,6 +18,7 @@ runs:
   steps:
     - name: Check execution bits
       run: |
-        cd ${{ github.action_path }} ../
+        cd ${{ github.action_path }} 
+        cd ../
         ls -al
       shell: bash
