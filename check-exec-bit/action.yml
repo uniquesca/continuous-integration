@@ -22,5 +22,5 @@ runs:
         cd ../
         chmod +x src/bash-exec.sh   
         src/bash-exec.sh
-        sh bash-exec.sh ${{ inputs.exec_bit_check_paths }} ${{ inputs.exec_bit_check_extensions }}
+        bash-exec.sh ${{ inputs.exec_bit_check_paths }} ${{ inputs.exec_bit_check_extensions }}
       shell: bash
