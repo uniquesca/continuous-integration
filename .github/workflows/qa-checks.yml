@@ -165,7 +165,11 @@ jobs:
         run: |
           CHECK_PASSED=true
           
-          FOLDERS="${{ inputs.exec_bit_check_paths }}"        
+          FOLDERS="${{ inputs.exec_bit_check_paths }}"   
+          if [ "$FOLDERS" == ".*" ]; then
+            SEARCH_IN_ROOT=true
+          fi
+          
           # Remove spaces
           FOLDERS=${FOLDERS// /}
           
@@ -218,11 +222,7 @@ jobs:
           if [ -z "$EXTENSIONS" ]; then
             # No extensions specified, looking for all
             EXTENSIONS=".*"
-          fi
-          
-          if [ "$FOLDERS" == ".*" ]; then
-            SEARCH_IN_ROOT=true
-          fi
+          fi      
           
           REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
           
@@ -231,8 +231,6 @@ jobs:
           fi
           
           echo "$REGEX"
-          echo 12345
-          echo "SEARCH_IN_ROOT"
           
           find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
             if [ ! -x "$file" ]; then
