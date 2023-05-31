@@ -162,5 +162,5 @@ jobs:
 
       - name: Check execution bits
         if: inputs.exec_bit_check == true
-        run: bash ./src/bash-exec.sh
+        run: bash .src/bash-exec.sh
 
