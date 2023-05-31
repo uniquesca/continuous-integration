@@ -182,7 +182,7 @@ jobs:
             SEARCH_IN_ROOT=false
           fi
           
-          echo "FOLDERS"
+          echo "$FOLDERS"
           # Replace slashes with escaped slashes
           FOLDERS=${FOLDERS//\//\\/}
           
