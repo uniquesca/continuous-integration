@@ -27,7 +27,8 @@ fi
 FOLDERS=${FOLDERS//\//\\/}
 
 # Remove the first and the last comma
-FOLDERS=${FOLDERS:1:-1}
+#FOLDERS=${FOLDERS:1:-1}
+FOLDERS=$(echo "$FOLDERS" | cut -c 2- | rev | cut -c 2- | rev)
 
 EXTENSIONS="$2"
 
@@ -41,7 +42,8 @@ EXTENSIONS=${EXTENSIONS//,,/,}
 EXTENSIONS=${EXTENSIONS//\//\\/}
 
 # Remove the first and the last comma
-EXTENSIONS=${EXTENSIONS:1:-1}
+#EXTENSIONS=${EXTENSIONS:1:-1}
+EXTENSIONS=$(echo "$EXTENSIONS" | cut -c 2- | rev | cut -c 2- | rev)
 
 # Replace comma with slash and vertical separator
 FOLDERS=${FOLDERS//,/\/\|}
