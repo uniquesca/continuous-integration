@@ -4,9 +4,6 @@
 CHECK_PASSED=true
 
 FOLDERS="${{ inputs.exec_bit_check_paths }}"
-if [[ "$FOLDERS" == .* ]]; then
-  SEARCH_IN_ROOT=true
-fi
 
 # Remove spaces
 FOLDERS=${FOLDERS// /}
@@ -63,6 +60,10 @@ if [ -z "$EXTENSIONS" ]; then
 fi
 
 REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
+
+if [[ ${{ inputs.exec_bit_check_paths }} == .* ]]; then
+  SEARCH_IN_ROOT=true
+fi
 
 if [ $SEARCH_IN_ROOT == true ]; then
   REGEX="$REGEX|\.\/[^\/]*($EXTENSIONS)"
