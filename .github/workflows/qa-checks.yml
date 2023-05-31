@@ -184,6 +184,10 @@ jobs:
             SEARCH_IN_ROOT=false
           fi
           
+          if [[ "$FOLDERS" == .* ]]; then
+            SEARCH_IN_ROOT=true
+          fi
+          
           # Replace slashes with escaped slashes
           FOLDERS=${FOLDERS//\//\\/}
           
