@@ -1,0 +1,20 @@
+name: 'check-exec-bit'
+
+inputs:
+  exec_bit_check_paths:
+    description: 'Paths to use for checking files for executability, split by comma. Use . (dot) to include 
+          root directory. Example: "module, vendor/bin" or "., node_modules"'
+    required: false
+    default: ''
+    type: string
+  exec_bit_check_extensions:
+    description: 'File extensions to check for executability, split by comma. Example: "sh, php"'
+    required: false
+    default: 'sh'
+    type: string
+
+runs:
+  using: "composite"
+  steps:
+    - name: Check execution bits
+      run: ${{ github.action_path }}/src/bash.exec.sh
