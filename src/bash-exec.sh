@@ -3,7 +3,7 @@
 
 CHECK_PASSED=true
 
-FOLDERS="${{ inputs.exec_bit_check_paths }}"
+FOLDERS="$1"
 
 # Remove spaces
 FOLDERS=${FOLDERS// /}
@@ -29,7 +29,7 @@ FOLDERS=${FOLDERS//\//\\/}
 # Remove the first and the last comma
 FOLDERS=${FOLDERS:1:-1}
 
-EXTENSIONS="${{ inputs.exec_bit_check_extensions }}"
+EXTENSIONS="$2"
 
 # Adding comma at the beginning and the end
 EXTENSIONS=",$EXTENSIONS,"
@@ -61,7 +61,7 @@ fi
 
 REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
 
-if [[ ${{ inputs.exec_bit_check_paths }} == .* ]]; then
+if [[ $1 == .* ]]; then
   SEARCH_IN_ROOT=true
 fi
 
