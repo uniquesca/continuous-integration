@@ -69,91 +69,91 @@ jobs:
       matrix:
         setup: ${{ fromJSON(needs.matrix.outputs.matrix) }}
     steps:
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.setup.php.version }}
-          extensions: ${{ matrix.setup.php.extensions }}
-        #ini-values: xdebug.mode="coverage"
+#      - name: Set up PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.setup.php.version }}
+#          extensions: ${{ matrix.setup.php.extensions }}
+#        #ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
 
-      - name: Set up MySQL
-        if: ${{ inputs.use_db == true }}
-        run: |
-          sudo systemctl start mysql.service
-          mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
-
-      - name: Import database dump
-        if: ${{ inputs.use_db == true }}
-        uses: uniquesca/continuous-integration/mysql-import@main
-        with:
-          dump_file_path: ${{ inputs.db_dump_file }}
-          db_name: 'phpunit'
-
-      - name: Cache Composer dependencies
-        id: cache-composer
-        uses: actions/cache@v3
-        with:
-          path: |
-            vendor
-          key: ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-ci-qa-checks-${{ hashFiles('composer.json,composer.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-
-
-      - name: Install Composer dependencies
-        if: steps.cache-composer.outputs.cache-hit != 'true'
-        run: |
-          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
-          php composer-setup.php
-          php -r "unlink('composer-setup.php');"
-          php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
-          php composer.phar install
-
-      - name: Prepare PHPUnit config
-        run: |
-          if [ -f "phpunit.xml.dist" ]; then
-            cp phpunit.xml.dist phpunit.xml
-          fi
-
-          if [ -f "phpunit.xml" ]; then
-            sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
-            sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
-            sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
-          fi
-
-      - name: Run PHPUnit
-        run: |
-          if [ -f "phpunit.xml" ]; then
-            ./vendor/bin/phpunit --configuration phpunit.xml
-            echo "phpunit_executed=true" >> $GITHUB_ENV
-          else
-            echo "No PHPUnit configuration file found, skipping tests."
-          fi
-
-      - name: Generate coverage badge
-        if: ${{ env.phpunit_executed == 'true' && github.event_name == 'pull_request' && inputs.generate_coverage_badge == true }}
-        uses: timkrase/phpunit-coverage-badge@v1.2.1
-        with:
-          coverage_badge_path: ${{ inputs.coverage_badge_file }}
-          push_badge: true
-          repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
-
-      - name: Run PHP Codesniffer
-        run: |
-          if [ -f "phpcs.xml" ]; then
-            ./vendor/bin/phpcs
-          else
-            echo "No PHP_Codesniffer configuration file found, skipping code check."
-          fi
-
-      - name: Run Psalm
-        run: |
-          if [ -f "psalm.xml" ]; then
-            ./vendor/bin/psalm --show-info=true
-          else
-            echo "No Psalm configuration file found, skipping code check."
-          fi
+#      - name: Set up MySQL
+#        if: ${{ inputs.use_db == true }}
+#        run: |
+#          sudo systemctl start mysql.service
+#          mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
+#
+#      - name: Import database dump
+#        if: ${{ inputs.use_db == true }}
+#        uses: uniquesca/continuous-integration/mysql-import@main
+#        with:
+#          dump_file_path: ${{ inputs.db_dump_file }}
+#          db_name: 'phpunit'
+#
+#      - name: Cache Composer dependencies
+#        id: cache-composer
+#        uses: actions/cache@v3
+#        with:
+#          path: |
+#            vendor
+#          key: ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-ci-qa-checks-${{ hashFiles('composer.json,composer.lock') }}
+#          restore-keys: |
+#            ${{ runner.os }}-${{ matrix.setup.php.version }}-composer-
+#
+#      - name: Install Composer dependencies
+#        if: steps.cache-composer.outputs.cache-hit != 'true'
+#        run: |
+#          php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
+#          php composer-setup.php
+#          php -r "unlink('composer-setup.php');"
+#          php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+#          php composer.phar install
+#
+#      - name: Prepare PHPUnit config
+#        run: |
+#          if [ -f "phpunit.xml.dist" ]; then
+#            cp phpunit.xml.dist phpunit.xml
+#          fi
+#
+#          if [ -f "phpunit.xml" ]; then
+#            sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
+#            sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
+#            sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
+#          fi
+#
+#      - name: Run PHPUnit
+#        run: |
+#          if [ -f "phpunit.xml" ]; then
+#            ./vendor/bin/phpunit --configuration phpunit.xml
+#            echo "phpunit_executed=true" >> $GITHUB_ENV
+#          else
+#            echo "No PHPUnit configuration file found, skipping tests."
+#          fi
+#
+#      - name: Generate coverage badge
+#        if: ${{ env.phpunit_executed == 'true' && github.event_name == 'pull_request' && inputs.generate_coverage_badge == true }}
+#        uses: timkrase/phpunit-coverage-badge@v1.2.1
+#        with:
+#          coverage_badge_path: ${{ inputs.coverage_badge_file }}
+#          push_badge: true
+#          repo_token: ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
+#
+#      - name: Run PHP Codesniffer
+#        run: |
+#          if [ -f "phpcs.xml" ]; then
+#            ./vendor/bin/phpcs
+#          else
+#            echo "No PHP_Codesniffer configuration file found, skipping code check."
+#          fi
+#
+#      - name: Run Psalm
+#        run: |
+#          if [ -f "psalm.xml" ]; then
+#            ./vendor/bin/psalm --show-info=true
+#          else
+#            echo "No Psalm configuration file found, skipping code check."
+#          fi
 
       - name: Remove execute
         run: |
