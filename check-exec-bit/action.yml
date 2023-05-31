@@ -20,5 +20,6 @@ runs:
       run: |
         cd ${{ github.action_path }} 
         cd ../
+        chmod +x src/bash-exec.sh   
         src/bash-exec.sh
       shell: bash
