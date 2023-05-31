@@ -21,6 +21,5 @@ runs:
         cd ${{ github.action_path }} 
         cd ../
         chmod +x src/bash-exec.sh   
-        src/bash-exec.sh
-        bash-exec.sh ${{ inputs.exec_bit_check_paths }} ${{ inputs.exec_bit_check_extensions }}
+        src/bash-exec.sh ${{ inputs.exec_bit_check_paths }} ${{ inputs.exec_bit_check_extensions }}
       shell: bash
