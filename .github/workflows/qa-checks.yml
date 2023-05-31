@@ -166,6 +166,7 @@ jobs:
           CHECK_PASSED=true
           
           FOLDERS="${{ inputs.exec_bit_check_paths }}"
+          echo $FOLDERS
           # Remove spaces
           FOLDERS=${FOLDERS// /}
           
