@@ -20,5 +20,5 @@ runs:
       run: |
         cd ${{ github.action_path }} 
         cd ../
-        ls -al
+        src/bash-exec.sh
       shell: bash
