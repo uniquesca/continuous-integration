@@ -163,6 +163,7 @@ jobs:
       - name: Check execution bits
         if: inputs.exec_bit_check == true
         run: |
+          cd src
           ls -al
           chmod +x ./src/bash-exec.sh
           bash ./src/bash-exec.sh
