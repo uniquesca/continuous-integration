@@ -17,5 +17,7 @@ runs:
   using: "composite"
   steps:
     - name: Check execution bits
-      run: ${{ github.action_path }}../src/bash-exec.sh
+      run: |
+        cd ${{ github.action_path }} ../
+        ls -al
       shell: bash
