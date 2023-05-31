@@ -164,6 +164,6 @@ jobs:
         if: inputs.exec_bit_check == true
         run: |
           ls -al
-          chmod +x src/bash-exec.sh
-          bash src/bash-exec.sh
+          chmod +x ./src/bash-exec.sh
+          bash ./src/bash-exec.sh
 
