@@ -166,7 +166,7 @@ jobs:
           CHECK_PASSED=true
           
           FOLDERS="${{ inputs.exec_bit_check_paths }}"   
-          if [ "$FOLDERS" == ".*" ]; then
+          if [[ "$FOLDERS" == .* ]]; then
             SEARCH_IN_ROOT=true
           fi
           
