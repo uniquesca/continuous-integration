@@ -166,6 +166,8 @@ jobs:
           CHECK_PASSED=true
           
           FOLDERS="${{ inputs.exec_bit_check_paths }}"
+          # Remove spaces
+          FOLDERS=${FOLDERS// /}
           
           # Adding comma at the beginning and the end
           FOLDERS=",$FOLDERS,"
@@ -202,8 +204,6 @@ jobs:
           # Remove the first and the last comma
           EXTENSIONS=${EXTENSIONS:1:-1}
           
-          # Remove spaces
-          FOLDERS=${FOLDERS// /}
           # Replace comma with slash and vertical separator
           FOLDERS=${FOLDERS//,/\/\|}
           echo "$FOLDERS"
