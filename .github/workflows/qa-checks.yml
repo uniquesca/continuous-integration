@@ -69,12 +69,12 @@ jobs:
       matrix:
         setup: ${{ fromJSON(needs.matrix.outputs.matrix) }}
     steps:
-      - name: Set up PHP
-        uses: shivammathur/setup-php@v2
-        with:
-          php-version: ${{ matrix.setup.php.version }}
-          extensions: ${{ matrix.setup.php.extensions }}
-        #ini-values: xdebug.mode="coverage"
+#      - name: Set up PHP
+#        uses: shivammathur/setup-php@v2
+#        with:
+#          php-version: ${{ matrix.setup.php.version }}
+#          extensions: ${{ matrix.setup.php.extensions }}
+#        #ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
 
@@ -184,7 +184,7 @@ jobs:
             SEARCH_IN_ROOT=false
           fi
           
-          if [[ "$FOLDERS" == .* ]]; then
+          if [[ "$FOLDERS" == '.*' ]]; then
             echo 54321
             SEARCH_IN_ROOT=true
           fi
@@ -211,7 +211,6 @@ jobs:
           
           # Replace comma with slash and vertical separator
           FOLDERS=${FOLDERS//,/\/\|}
-          echo "$FOLDERS"
           
           if [ -z "$FOLDERS" ]; then
             # No folders specified
