@@ -3,7 +3,7 @@
 
 CHECK_PASSED=true
 
-FOLDERS="$1"
+FOLDERS="$2"
 
 # Remove spaces
 FOLDERS=${FOLDERS// /}
@@ -30,7 +30,7 @@ FOLDERS=${FOLDERS//\//\\/}
 #FOLDERS=${FOLDERS:1:-1}
 FOLDERS=$(echo "$FOLDERS" | cut -c 2- | rev | cut -c 2- | rev)
 
-EXTENSIONS="$2"
+EXTENSIONS="$3"
 
 # Adding comma at the beginning and the end
 EXTENSIONS=",$EXTENSIONS,"
@@ -63,7 +63,7 @@ fi
 
 REGEX="\.\/($FOLDERS).*\.($EXTENSIONS)"
 
-if [[ $1 == .* ]]; then
+if [[ $2 == .* ]]; then
   SEARCH_IN_ROOT=true
 fi
 
@@ -73,7 +73,7 @@ fi
 
 echo "$REGEX"
 
-find . -type f -regextype posix-extended -regex "$REGEX" | while read file; do
+find $1 -type f -regextype posix-extended -regex "$REGEX" | while read file; do
   if [ ! -x "$file" ]; then
     echo "$file is not executable"
     CHECK_PASSED=false
