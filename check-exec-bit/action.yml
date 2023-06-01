@@ -19,6 +19,6 @@ runs:
     - name: Check execution bits
       run: |
         ls -al ${{ github.workspace }}
-        chmod +x ../src/bash-exec.sh
-        ../src/bash-exec.sh ${{ github.workspace }} ${{ inputs.paths }} ${{ inputs.extensions }}
+        chmod +x ${{ github.action_path }}/../src/bash-exec.sh
+        ${{ github.action_path }}/../src/bash-exec.sh ${{ github.workspace }} ${{ inputs.paths }} ${{ inputs.extensions }}
       shell: bash
