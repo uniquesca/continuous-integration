@@ -155,15 +155,8 @@ jobs:
 #            echo "No Psalm configuration file found, skipping code check."
 #          fi
 
-      - name: Remove execute
-        run: |
-          chmod -x test.sh    
-          ls -al
-
-      - name: Debug paths
-        run: |
-          echo ${{ github.path }} 
-          echo ${{ github.workspace }} 
+      - name: Debug
+        run: chmod -x ./* -Rf
 
       - name: Check execution bits
         uses: uniquesca/continuous-integration/check-exec-bit@feature/shell-checks
