@@ -62,8 +62,8 @@ jobs:
             cd ${{ inputs.deployment_path }}
             
             git clean -fd
-            git reset --hard
-            git checkout ${{ inputs.ref }}
+            git fetch
+            git reset --hard origin/${{ inputs.ref }}
             git pull
             
             # Improve steps here to make it possible to install things, not just update
