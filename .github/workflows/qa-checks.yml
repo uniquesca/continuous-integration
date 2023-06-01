@@ -166,7 +166,7 @@ jobs:
 
       - name: Debug paths
         run: |
-          echo ${{ github.action_path }} 
+          echo ${{ github.path }} 
           echo ${{ github.workspace }} 
 
       - name: Check execution bits
