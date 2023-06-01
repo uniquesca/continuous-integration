@@ -81,6 +81,6 @@ find $1 -type f -regextype posix-extended -regex "$REGEX" | while read file; do
   fi
 done
 
-if [! $CHECK_PASSED ] ; then
+if [ "$CHECK_PASSED" != true ] ; then
   exit 1
 fi
