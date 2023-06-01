@@ -164,6 +164,11 @@ jobs:
           chmod -x test.sh    
           ls -al
 
+      - name: Debug paths
+        run: |
+          echo ${{ github.action_path }} 
+          echo ${{ github.workspace }} 
+
       - name: Check execution bits
         uses: uniquesca/continuous-integration/check-exec-bit@feature/shell-checks
         if: inputs.exec_bit_check == true
