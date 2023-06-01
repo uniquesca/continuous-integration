@@ -72,7 +72,8 @@ if [ $SEARCH_IN_ROOT == true ]; then
 fi
 
 echo "$REGEX"
-
+echo "$1"
+ls $1
 find $1 -type f -regextype posix-extended -regex "$REGEX" | while read file; do
   if [ ! -x "$file" ]; then
     echo "$file is not executable"
@@ -80,6 +81,6 @@ find $1 -type f -regextype posix-extended -regex "$REGEX" | while read file; do
   fi
 done
 
-if $CHECK_PASSED ; then
+if [! $CHECK_PASSED ] ; then
   exit 1
 fi
