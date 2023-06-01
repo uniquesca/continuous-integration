@@ -18,7 +18,7 @@ runs:
   steps:
     - name: Check execution bits
       run: |
-        echo "${{ github.workspace }}
+        ls -al ${{ github.workspace }}
         chmod +x ../src/bash-exec.sh
         ../src/bash-exec.sh ${{ github.workspace }} ${{ inputs.paths }} ${{ inputs.extensions }}
       shell: bash
