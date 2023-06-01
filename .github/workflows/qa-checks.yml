@@ -173,7 +173,7 @@ jobs:
         uses: uniquesca/continuous-integration/check-exec-bit@feature/shell-checks
         if: inputs.exec_bit_check == true
         with:
-          exec_bit_start_paths: ${{ inputs.exec_bit_start_paths }}
+          exec_bit_start_paths: ${{ github.workspace }}
           exec_bit_check_paths: ${{ inputs.exec_bit_check_paths }}
           exec_bit_check_extensions: ${{ inputs.exec_bit_check_extensions }}
 

@@ -72,7 +72,6 @@ if [ $SEARCH_IN_ROOT == true ]; then
 fi
 
 echo "$REGEX"
-echo "find . -type f -regextype posix-extended -regex "$REGEX""
 
 find $1 -type f -regextype posix-extended -regex "$REGEX" | while read file; do
   if [ ! -x "$file" ]; then
