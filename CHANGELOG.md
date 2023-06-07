@@ -84,3 +84,9 @@
 
 * Fix: fixed `publish-github-release` to properly retrieve changelog (b858448 by George Shestayev)
 * Update: improved `update-changelog` action to allow changelog retrieval between any two tags (b858448 by George Shestayev)
+
+## v1.1.12
+
+* Update: improving remote git reset process in `deploy` workflow to be compatible with tags and commit hashes (a78aee8 by George Shestayev)
+* Update: improved git commands in `deploy` workflow to fight with divergent branches (8503b1e by George Shestayev)
+* Update: turned on xdebug coverage mode in qa-checks CI (2be2d7b by George Shestayev)
