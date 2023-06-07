@@ -62,9 +62,16 @@ jobs:
             cd ${{ inputs.deployment_path }}
             
             git clean -fd
-            git reset --hard
-            git checkout ${{ inputs.ref }}
-            git pull
+            git fetch
+            
+            git ls-remote --exit-code --heads origin ${{ inputs.ref }} >/dev/null 2>&1
+            EXIT_CODE=$?
+            
+            if [[ $EXIT_CODE == '0' ]]; then
+              git reset --hard origin/${{ inputs.ref }}
+            else
+              git reset --hard ${{ inputs.ref }}
+            fi
             
             # Improve steps here to make it possible to install things, not just update
             # mysql -u root -p root -e "CREATE DATABASE IF NOT EXISTS officio.forms;"
