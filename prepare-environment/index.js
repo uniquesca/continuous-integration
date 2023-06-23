@@ -2,11 +2,11 @@ import core from "@actions/core";
 import fs from "fs";
 import process from "process";
 
-const configStub = core.getInput('config_stub_file');
-const config = core.getInput('config_file');
-const replacements = core.getInput('environment_variables');
-const environment_token_format = core.getInput('environment_token_format');
-const config_file_encoding = core.getInput('config_file_encoding');
+const configStub = core.getInput('env_config_stub');
+const config = core.getInput('env_config');
+const replacements = core.getInput('env_variables');
+const environment_token_format = core.getInput('token_format');
+const config_file_encoding = core.getInput('env_config_encoding');
 
 const replacementsParsed = JSON.parse(replacements);
 if (!replacementsParsed) {

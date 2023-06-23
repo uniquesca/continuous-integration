@@ -7,6 +7,29 @@ on:
         description: 'Access token for cloning Uniques private repositories from GitHub'
         required: true
     inputs:
+      setup_env:
+        description: 'Whether environment config needs to be set up'
+        required: false
+        default: false
+        type: boolean
+      env_config_stub:
+        description: 'Config stub file to copy into an actual environment config file. If empty, no copy will be performed.'
+        required: false
+        default: ''
+      env_config:
+        description: 'Environment config file to set up.'
+        required: true
+      env_config_encoding:
+        description: 'Encoding for the environment config file.'
+        required: false
+        default: 'utf8'
+      env_variables:
+        description: 'JSON string containing an object, where keysa are variable names, and values are values to replace them with.'
+        required: true
+      env_token_format:
+        description: 'Format for the token name used, use $token to replace with actual token name'
+        required: false
+        default: '\\${{[ ]*$token[ ]*}}'
       use_db:
         description: 'Whether a database is needed (for example for unit tests)'
         required: false
