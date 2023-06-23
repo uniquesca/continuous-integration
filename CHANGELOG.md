@@ -90,3 +90,8 @@
 * Update: improving remote git reset process in `deploy` workflow to be compatible with tags and commit hashes (a78aee8 by George Shestayev)
 * Update: improved git commands in `deploy` workflow to fight with divergent branches (8503b1e by George Shestayev)
 * Update: turned on xdebug coverage mode in qa-checks CI (2be2d7b by George Shestayev)
+
+## v1.1.13
+
+* Fix: fixed PHP setup code for `qa-checks` (5eee0d8 by George Shestayev)
+* New: introduced `prepare-environment` action which parses JSON object and replaces variables in application config (8e9c359 by George Shestayev)
