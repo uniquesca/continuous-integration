@@ -1,25 +1,9 @@
 name: Prepare environment config
 
 inputs:
-  env_config_stub:
-    description: 'Config stub file to copy into an actual environment config file. If empty, no copy will be performed.'
-    required: false
-    default: ''
-  env_config:
-    description: 'Environment config file to set up.'
-    required: true
-  env_config_encoding:
-    description: 'Encoding for the environment config file.'
-    required: false
-    default: 'utf8'
   env_variables:
-    description: 'JSON string containing an object, where keysa are variable names, and values are values to replace them with.'
+    description: 'JSON string object with information about variables and mappings. See more in the documentation.'
     required: true
-  token_format:
-    description: 'Format for the token name used, use $token to replace with actual token name'
-    required: false
-    default: '\\${{[ ]*$token[ ]*}}'
-
 
 runs:
   using: 'node16'

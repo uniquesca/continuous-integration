@@ -7,29 +7,6 @@ on:
         description: 'Access token for cloning Uniques private repositories from GitHub'
         required: true
     inputs:
-      setup_env:
-        description: 'Whether environment config needs to be set up'
-        required: false
-        default: false
-        type: boolean
-      env_config_stub:
-        description: 'Config stub file to copy into an actual environment config file. If empty, no copy will be performed.'
-        required: false
-        default: ''
-      env_config:
-        description: 'Environment config file to set up.'
-        required: true
-      env_config_encoding:
-        description: 'Encoding for the environment config file.'
-        required: false
-        default: 'utf8'
-      env_variables:
-        description: 'JSON string containing an object, where keysa are variable names, and values are values to replace them with.'
-        required: true
-      env_token_format:
-        description: 'Format for the token name used, use $token to replace with actual token name'
-        required: false
-        default: '\\${{[ ]*$token[ ]*}}'
       use_db:
         description: 'Whether a database is needed (for example for unit tests)'
         required: false
@@ -59,15 +36,12 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - run: sudo apt-get install jq -y
-
-      - name: Get CI configuration from ci.json file
-        id: matrix
-        run: echo "matrix=$(cat ci.json | jq -c .)" >> $GITHUB_OUTPUT
+      - id: matrix
+        uses: uniquesca/continuous-integration/prepare-ci-matrix@feature/add-mysql-setup
 
   qa:
     name: Run QA checks
-    needs: [matrix]
+    needs: [ matrix ]
     runs-on: ${{ matrix.setup.os }}
     env:
       phpunit_executed: false
@@ -80,8 +54,8 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.setup.php.version }}
-          extensions: ${{ matrix.setup.php.extensions }}
-        ini-values: xdebug.mode="coverage"
+          extensions: "${{ matrix.setup.php.extensions }} xdebug"
+          ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
 
@@ -97,6 +71,12 @@ jobs:
         with:
           dump_file_path: ${{ inputs.db_dump_file }}
           db_name: 'phpunit'
+
+      - name: Set up environment
+        if: ${{ inputs.use_db == true }}
+        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        with:
+          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root"}'
 
       - name: Cache Composer dependencies
         id: cache-composer
