@@ -29,10 +29,10 @@ let configContent = fs.readFileSync(config, config_file_encoding);
 for (const key of Object.keys(replacements)) {
     let value = replacements[key];
     // Process was simplified, no need for the below part
-    // const patternRegex = new RegExp(environment_token_format);
-    // const pattern = environment_token_format.replace('$token', key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'));
-    // const regex = new RegExp(pattern, 'g');
-    configContent = configContent.replaceAll(key, value);
+    const patternRegex = '[\${ ]*[' + key.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\w\.-_][\$} ]*';
+    const regex = new RegExp(patternRegex, 'g');
+    configContent = configContent.replaceAll(regex, value);
+    core.info(configContent);
 }
 
 fs.writeFileSync(config, configContent);
