@@ -44,7 +44,7 @@ jobs:
     needs: [ matrix ]
     runs-on: ${{ matrix.setup.os }}
     env:
-      phpunit_executed: false
+      phpunit_present: false
     strategy:
       fail-fast: false
       matrix:
@@ -58,19 +58,6 @@ jobs:
           ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
-
-      - name: Set up MySQL
-        if: ${{ inputs.use_db == true }}
-        run: |
-          sudo systemctl start mysql.service
-          mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
-
-      - name: Import database dump
-        if: ${{ inputs.use_db == true }}
-        uses: uniquesca/continuous-integration/mysql-import@main
-        with:
-          dump_file_path: ${{ inputs.db_dump_file }}
-          db_name: 'phpunit'
 
       - name: Cache Composer dependencies
         id: cache-composer
@@ -91,25 +78,41 @@ jobs:
           php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
           php composer.phar install
 
-      - name: Set up PHPUnit environment file
-        if: ${{ inputs.use_db == true }}
-        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
-        with:
-          env_config: "phpunit.xml"
-          env_config_stub: "phpunit.xml.dist"
-          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
-
-      - name: Run PHPUnit
+      - name: Check if we have PHPUnit
         run: |
-          if [ -f "phpunit.xml" ]; then
-            ./vendor/bin/phpunit --configuration phpunit.xml
-            echo "phpunit_executed=true" >> $GITHUB_ENV
+          if [[ -f "phpunit.xml" ]] || [[ -f "phpunit.xml.dist" ]]; then
+            echo "phpunit_present=true" >> $GITHUB_ENV
           else
             echo "No PHPUnit configuration file found, skipping tests."
           fi
 
+      - name: Set up MySQL
+        if: inputs.use_db == true && env.phpunit_present == true
+        run: |
+          sudo systemctl start mysql.service
+          mysql -uroot -proot -h127.0.0.1 -e 'CREATE DATABASE phpunit;'
+
+      - name: Import database dump
+        if: inputs.use_db == true && env.phpunit_present == true
+        uses: uniquesca/continuous-integration/mysql-import@main
+        with:
+          dump_file_path: ${{ inputs.db_dump_file }}
+          db_name: 'phpunit'
+
+      - name: Set up PHPUnit environment file
+        if: inputs.use_db == true && env.phpunit_present == true
+        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        with:
+          env_config: "phpunit.xml"
+          env_config_stub: "phpunit.xml.dist"
+          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"127.0.0.1","db.port":"3306"}'
+
+      - name: Run PHPUnit
+        if: env.phpunit_present == true
+        run: ./vendor/bin/phpunit --configuration phpunit.xml
+
       - name: Generate coverage badge
-        if: ${{ env.phpunit_executed == 'true' && github.event_name == 'pull_request' && inputs.generate_coverage_badge == true }}
+        if: ${{ env.phpunit_present == true && github.event_name == 'pull_request' && inputs.generate_coverage_badge == true }}
         uses: timkrase/phpunit-coverage-badge@v1.2.1
         with:
           coverage_badge_path: ${{ inputs.coverage_badge_file }}
