@@ -8,7 +8,7 @@ import {CiEnvVariableMapper} from "../src/classes/CiEnvVariableMapper.js";
 const env = CiEnvironment.fromEnvironmentFile();
 
 // Checking config file path - firstly from intput, then - from environment file
-let config = core.getInput('env_config');
+let config = core.getInput('env_file');
 if (!config || config == '') {
     config = env.env_file;
 }
@@ -17,7 +17,7 @@ if (!config || config == '') {
 }
 
 // Copying stub file if exists - firstly from intput, then - from environment file
-let configStub = core.getInput('env_config_stub');
+let configStub = core.getInput('env_file_stub');
 if (!configStub || configStub == '') {
     configStub = env.env_file_stub;
 }
