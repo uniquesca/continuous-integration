@@ -54,7 +54,7 @@ jobs:
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.setup.php.version }}
-          extensions: "${{ matrix.setup.php.extensions }} xdebug"
+          extensions: ${{ matrix.setup.php.extensions }}
           ini-values: xdebug.mode="coverage"
 
       - uses: actions/checkout@v3
@@ -71,12 +71,6 @@ jobs:
         with:
           dump_file_path: ${{ inputs.db_dump_file }}
           db_name: 'phpunit'
-
-      - name: Set up environment
-        if: ${{ inputs.use_db == true }}
-        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
-        with:
-          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
 
       - name: Cache Composer dependencies
         id: cache-composer
@@ -96,19 +90,15 @@ jobs:
           php -r "unlink('composer-setup.php');"
           php composer.phar config --auth github-oauth.github.com ${{ secrets.UNIQUES_GITHUB_ACCESS_TOKEN }}
           php composer.phar install
-      
-      - name: Prepare PHPUnit config
-        run: |
-          if [ -f "phpunit.xml.dist" ]; then
-            cp phpunit.xml.dist phpunit.xml
-          fi
-        
-          if [ -f "phpunit.xml" ]; then
-            sed -i 's/name="db_username" value=""/name="db_username" value="root"/' phpunit.xml
-            sed -i 's/name="db_password" value=""/name="db_password" value="root"/' phpunit.xml
-            sed -i 's/name="db_name" value=""/name="db_name" value="phpunit"/' phpunit.xml
-          fi
-          
+
+      - name: Set up PHPUnit environment file
+        if: ${{ inputs.use_db == true }}
+        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        with:
+          env_config: "phpunit.xml"
+          env_config_stub: "phpunit.xml.dist"
+          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
+
       - name: Run PHPUnit
         run: |
           if [ -f "phpunit.xml" ]; then
@@ -117,7 +107,7 @@ jobs:
           else
             echo "No PHPUnit configuration file found, skipping tests."
           fi
-      
+
       - name: Generate coverage badge
         if: ${{ env.phpunit_executed == 'true' && github.event_name == 'pull_request' && inputs.generate_coverage_badge == true }}
         uses: timkrase/phpunit-coverage-badge@v1.2.1
