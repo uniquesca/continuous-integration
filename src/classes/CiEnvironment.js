@@ -29,7 +29,7 @@ export class CiEnvironment {
         Object.assign < CiEnvironment, any > (this, copy);
     }
 
-    fromEnvironmentFile() {
+    static fromEnvironmentFile() {
         let input = {};
         if (fs.fileExistsSync('_ci_environment.json')) {
             const envString = fs.readFileSync('_ci_environment.json');
