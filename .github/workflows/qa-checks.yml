@@ -105,8 +105,8 @@ jobs:
         if: env.phpunit_present == 1
         uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
         with:
-          env_config: "phpunit.xml"
-          env_config_stub: "phpunit.xml.dist"
+          env_file: "phpunit.xml"
+          env_file_stub: "phpunit.xml.dist"
           env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"127.0.0.1","db.port":"3306"}'
 
       - name: Run PHPUnit
