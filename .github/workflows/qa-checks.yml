@@ -109,6 +109,12 @@ jobs:
           env_file_stub: "phpunit.xml.dist"
           env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"127.0.0.1","db.port":"3306"}'
 
+      - name: Set up default environment file
+        if: env.phpunit_present == 1
+        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        with:
+          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"127.0.0.1","db.port":"3306"}'
+
       - name: Run PHPUnit
         if: env.phpunit_present == 1
         run: ./vendor/bin/phpunit --configuration phpunit.xml
