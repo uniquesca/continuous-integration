@@ -26,7 +26,7 @@ export class CiEnvironment {
             copy.job_matrix = copy.job_matrix.map(jobInfo = new CiJob(jobInfo));
         }
 
-        Object.assign < CiEnvironment, any > (this, copy);
+        Object.assign(this, copy);
     }
 
     static fromEnvironmentFile() {

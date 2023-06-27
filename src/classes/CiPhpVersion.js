@@ -4,6 +4,6 @@ export class CiPhpVersion {
 
     constructor(input) {
         const copy = {...input};
-        Object.assign < CiPhpVersion, any > (this, copy);
+        Object.assign(this, copy);
     }
 };

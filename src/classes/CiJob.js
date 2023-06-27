@@ -14,6 +14,6 @@ export class CiJob {
             copy.php = new CiPhpVersion(copy.php);
         }
 
-        Object.assign < CiJob, any > (this, copy);
+        Object.assign(this, copy);
     }
 };
