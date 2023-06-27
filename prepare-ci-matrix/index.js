@@ -1,4 +1,5 @@
 import core from "@actions/core";
+import {CiEnvironment} from "../src/classes/CiEnvironment.js";
 
 try {
     const env = CiEnvironment.fromEnvironmentFile();
