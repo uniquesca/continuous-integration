@@ -23,7 +23,7 @@ export class CiEnvironment {
         const copy = {...input};
 
         if (copy.job_matrix) {
-            copy.job_matrix = copy.job_matrix.map(jobInfo = new CiJob(jobInfo));
+            copy.job_matrix = copy.job_matrix.map(jobInfo => new CiJob(jobInfo));
         }
 
         Object.assign(this, copy);
