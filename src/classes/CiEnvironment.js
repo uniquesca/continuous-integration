@@ -31,7 +31,7 @@ export class CiEnvironment {
 
     static fromEnvironmentFile() {
         let input = {};
-        if (fs.fileExistsSync('_ci_environment.json')) {
+        if (fs.existsSync('_ci_environment.json')) {
             const envString = fs.readFileSync('_ci_environment.json');
             input = JSON.parse(envString);
         }
