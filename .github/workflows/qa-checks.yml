@@ -76,7 +76,7 @@ jobs:
         if: ${{ inputs.use_db == true }}
         uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
         with:
-          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root"}'
+          env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
 
       - name: Cache Composer dependencies
         id: cache-composer

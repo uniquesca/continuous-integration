@@ -25,7 +25,7 @@ runs:
     - name: Set up environment
       uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
       with:
-        env_variables: '{"db.name":"mysql_migration_db","db.username":"root","db.password":"root"}'
+        env_variables: '{"db.name":"mysql_migration_db","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
 
     - name: Run DB migration
       run: ${{ inputs.migration_command }}
