@@ -17,7 +17,7 @@ if (!config || config == '') {
 }
 
 // Copying stub file if exists - firstly from intput, then - from environment file
-const configStub = core.getInput('env_config_stub');
+let configStub = core.getInput('env_config_stub');
 if (!configStub || configStub == '') {
     configStub = env.env_file_stub;
 }
