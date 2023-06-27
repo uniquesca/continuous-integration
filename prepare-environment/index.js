@@ -5,7 +5,7 @@ import {CiEnvironment} from "../src/classes/CiEnvironment.js";
 import {CiEnvVariableMapper} from "../src/classes/CiEnvVariableMapper.js";
 
 const variables = core.getInput('env_variables');
-const variablesParsed = JSON.parse(variables);
+let variablesParsed = JSON.parse(variables);
 if (!variablesParsed) {
     variablesParsed = {};
 }
