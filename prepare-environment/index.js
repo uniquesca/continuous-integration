@@ -17,6 +17,7 @@ if (config == '') {
     throw new Error('Environment file is not defined!');
 }
 
+core.info(variablesParsed);
 const envMapper = new CiEnvVariableMapper(variablesParsed, env);
 variablesParsed = envMapper.map();
 
@@ -26,6 +27,7 @@ if (configStub !== '') {
 
 let configContent = fs.readFileSync(config, 'utf8');
 
+core.info(variablesParsed);
 for (const key of Object.keys(variablesParsed)) {
     let value = variablesParsed[key];
     // Process was simplified, no need for the below part
