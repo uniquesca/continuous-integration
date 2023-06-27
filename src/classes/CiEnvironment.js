@@ -1,3 +1,4 @@
+import core from "@actions/core";
 import fs from "fs";
 import {CiJob} from "./CiJob.js";
 
@@ -34,6 +35,7 @@ export class CiEnvironment {
         if (fs.existsSync('_ci_environment.json')) {
             const envString = fs.readFileSync('_ci_environment.json');
             input = JSON.parse(envString);
+            core.info('Found environment file _ci_environment.json');
         }
 
         return new CiEnvironment(input);
