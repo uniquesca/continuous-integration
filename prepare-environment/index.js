@@ -24,7 +24,7 @@ if (configStub !== '') {
     fs.copyFileSync(configStub, config);
 }
 
-let configContent = fs.readFileSync(config, config_file_encoding);
+let configContent = fs.readFileSync(config, 'utf8');
 
 for (const key of Object.keys(replacements)) {
     let value = replacements[key];
