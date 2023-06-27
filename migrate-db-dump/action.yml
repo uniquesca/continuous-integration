@@ -23,7 +23,7 @@ runs:
         db_name: mysql_migration_db
 
     - name: Set up environment
-      uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+      uses: uniquesca/continuous-integration/prepare-environment@2
       with:
         env_variables: '{"db.name":"mysql_migration_db","db.username":"root","db.password":"root","db.host":"localhost","db.port":"3306"}'
 

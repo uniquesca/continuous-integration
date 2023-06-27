@@ -94,7 +94,7 @@ jobs:
 
       - name: Init database
         if: ${{ inputs.update_db == true }}
-        uses: uniquesca/continuous-integration/migrate-db-dump@feature/add-mysql-setup
+        uses: uniquesca/continuous-integration/migrate-db-dump@2
         with:
           db_dump_file: ${{ inputs.db_dump_path }}
           migration_command: ${{ inputs.migration_command }}

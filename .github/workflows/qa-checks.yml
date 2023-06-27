@@ -37,7 +37,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - id: matrix
-        uses: uniquesca/continuous-integration/prepare-ci-matrix@feature/add-mysql-setup
+        uses: uniquesca/continuous-integration/prepare-ci-matrix@2
 
   qa:
     name: Run QA checks
@@ -103,7 +103,7 @@ jobs:
 
       - name: Set up PHPUnit environment file
         if: env.phpunit_present == 1
-        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        uses: uniquesca/continuous-integration/prepare-environment@2
         with:
           env_file: "phpunit.xml"
           env_file_stub: "phpunit.xml.dist"
@@ -111,7 +111,7 @@ jobs:
 
       - name: Set up default environment file
         if: env.phpunit_present == 1
-        uses: uniquesca/continuous-integration/prepare-environment@feature/add-mysql-setup
+        uses: uniquesca/continuous-integration/prepare-environment@2
         with:
           env_variables: '{"db.name":"phpunit","db.username":"root","db.password":"root","db.host":"127.0.0.1","db.port":"3306"}'
 
